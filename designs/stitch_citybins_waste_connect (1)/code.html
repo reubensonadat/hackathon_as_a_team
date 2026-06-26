@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CityBins - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@300,0&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#6be026",
+                    "surface-container": "#eeeeee",
+                    "on-primary": "#ffffff",
+                    "secondary": "#5f5e5e",
+                    "inverse-surface": "#2f3131",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-secondary-container": "#636262",
+                    "surface": "#f9f9f9",
+                    "inverse-on-surface": "#f1f1f1",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "primary": "#2b6c00",
+                    "primary-fixed-dim": "#6be026",
+                    "surface-dim": "#dadada",
+                    "outline-variant": "#becbb1",
+                    "on-background": "#1a1c1c",
+                    "on-secondary-fixed-variant": "#474746",
+                    "surface-container-high": "#e8e8e8",
+                    "error": "#ba1a1a",
+                    "background": "#F3F4F6",
+                    "tertiary-fixed": "#ffd8eb",
+                    "on-primary-container": "#1e5000",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#7d2061",
+                    "on-primary-fixed-variant": "#1f5100",
+                    "on-secondary-fixed": "#1b1c1c",
+                    "primary-container": "#58cc02",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffaedd",
+                    "on-tertiary-container": "#7b1f60",
+                    "primary-fixed": "#87fe45",
+                    "on-tertiary-fixed": "#3b002c",
+                    "outline": "#6f7b64",
+                    "on-surface": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#e2dfde",
+                    "surface-container-low": "#f4f3f3",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#ff8ed4",
+                    "secondary-fixed": "#e5e2e1",
+                    "surface-bright": "#f9f9f9",
+                    "tertiary": "#9a397a",
+                    "surface-tint": "#2b6c00",
+                    "on-surface-variant": "#3f4a36",
+                    "on-primary-fixed": "#082100"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-mobile": "12px",
+                    "base": "4px",
+                    "sm": "12px",
+                    "md": "16px",
+                    "xs": "8px",
+                    "lg": "24px",
+                    "margin-mobile": "20px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "sans": ["Inter", "sans-serif"]
+            },
+          }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center p-margin-mobile antialiased font-sans">
+<!-- Main Container -->
+<main class="w-full max-w-md bg-white p-lg rounded-lg shadow-md flex flex-col items-center gap-xl text-center">
+<!-- Branding Section -->
+<div class="flex flex-col items-center gap-sm w-full">
+<div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-sm">
+<span class="material-symbols-outlined text-[32px] text-gray-800" style="font-variation-settings: 'wght' 300;">
+                    delete
+                </span>
+</div>
+<h1 class="text-3xl font-semibold text-gray-900 tracking-tight">
+                CityBins
+            </h1>
+<p class="text-base text-gray-500">
+                Clean your neighborhood.
+            </p>
+</div>
+<!-- Illustration/Decorative Area -->
+<div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden relative" data-alt="A clean, minimalist 3D illustration of a city street corner. Soft lighting, neutral colors with subtle green accents. Professional and modern." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDP8z9f0pDZ2jp7xZCrdreKjwnJmrmPyVuQF_wvhaRG2akWfQmvEMKtrOBG7jojX6NOzEPENwVR7NEatxU6NWZfAZdZgXx3e0NQ0oXC5sXvN5I8VdBFnRrqKS4qsrpDMvcdR3PIWGGnw9vLTZnt1_WlKMSaRQasR_gOGn_OyjfN1x8QXVCgU2PA-5HUwEfwNOPp3ohmFvNXmDmcDSGFgLoRpxYOe3XY8VUtt_7pxr4NGJZuDr0vTwwGfHvFXy5a1XuXm8RIOqMBuVo'); background-size: cover; background-position: center;">
+<!-- Image handled via background for cleaner container, but including a fallback visual structure -->
+</div>
+<!-- Authentication Section -->
+<div class="w-full flex flex-col gap-sm">
+<button class="w-full h-[48px] bg-black text-white font-medium text-sm rounded-md flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors">
+<svg class="w-5 h-5" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                Continue with Google
+            </button>
+<p class="text-sm text-gray-500 mt-2">
+                By continuing, you agree to our Terms of Service.
+            </p>
+</div>
+</main>
+</body></html>
