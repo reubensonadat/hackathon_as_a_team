@@ -1,0 +1,7 @@
+-- BorlaBoard schema
+-- Run the migration file in Supabase SQL Editor:
+--   supabase/migrations/20250626230000_initial_schema.sql
+--
+-- Or with Supabase CLI (from project root):
+--   supabase link --project-ref YOUR_REF
+--   supabase db push
