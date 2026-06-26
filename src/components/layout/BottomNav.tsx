@@ -25,7 +25,7 @@ export function BottomNav({ items }: BottomNavProps) {
         {activeIndex >= 0 && (
           <motion.div
             layoutId="nav-pill"
-            className="absolute inset-y-1.5 rounded-full bg-orange-500"
+            className="absolute inset-y-1.5 rounded-full bg-[var(--color-primary)]"
             style={{
               width: `calc((100% - 12px) / ${items.length})`,
               left: `calc(6px + ${activeIndex} * ((100% - 12px) / ${items.length}))`,
