@@ -9,7 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signInWithPhone: (phone: string) => Promise<{ error: any }>
-  verifyPhoneOtp: (phone: string, token: string) => Promise<{ error: any }>
+  verifyPhoneOtp: (phone: string, token: string) => Promise<{ error: any; user?: any }>
   signUp: (email: string, password: string) => Promise<{ error: any; session: any; user: any }>
   signOut: () => Promise<void>
 }
@@ -86,8 +86,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyPhoneOtp = async (phone: string, token: string) => {
     if (!supabase) return { error: new Error('Supabase client not initialized') }
-    const { error } = await supabase.auth.verifyOtp({ phone, token, type: 'sms' })
-    return { error }
+    const { data, error } = await supabase.auth.verifyOtp({ phone, token, type: 'sms' })
+    return { error, user: data?.user }
   }
 
   const signUp = async (email: string, password: string) => {

@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/Input'
 import { MapPlaceholder } from '@/components/layout/MapPlaceholder'
 import { hapticTap } from '@/lib/utils'
 import { motion } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
+import { getOrCreateDeviceId } from '@/lib/deviceId'
 
 export default function ResidentialPage() {
   const navigate = useNavigate()
@@ -33,6 +35,26 @@ export default function ResidentialPage() {
     setError(null)
     try {
       const fullAddress = `${houseNumber ? 'House ' + houseNumber + ', ' : ''}${address.trim()}`
+      
+      const deviceId = getOrCreateDeviceId()
+      const fullName = localStorage.getItem('borlaboard_profile_name') || ''
+      const phone = localStorage.getItem('borlaboard_profile_phone') || ''
+
+      if (supabase) {
+        const { error: dbError } = await supabase.from('residents').upsert({
+          device_id: deviceId,
+          full_name: fullName,
+          phone: phone,
+          address_line: fullAddress,
+          area: area,
+          city: 'Cape Coast',
+          onboarding_complete: true,
+          updated_at: new Date().toISOString()
+        })
+        
+        if (dbError) throw dbError
+      }
+
       localStorage.setItem('borlaboard_residential_address', fullAddress)
       localStorage.setItem('borlaboard_residential_area', area)
       localStorage.setItem('borlaboard_property_type', propertyType)

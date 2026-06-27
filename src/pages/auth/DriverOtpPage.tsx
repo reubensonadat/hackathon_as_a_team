@@ -6,28 +6,59 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { NavIcons } from '@/components/icons'
 import { hapticTap } from '@/lib/utils'
+import { useAuth } from '@/context/AuthContext'
+import { supabase } from '@/lib/supabase'
 
 export default function DriverOtpPage() {
   const navigate = useNavigate()
+  const { verifyPhoneOtp } = useAuth()
   const phone = sessionStorage.getItem('borlaboard_driver_phone') ?? ''
   const [otp, setOtp] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleVerify() {
-    if (otp.length !== 4) {
-      setError('Enter the 4-digit code')
+    if (otp.length !== 6) {
+      setError('Enter the 6-digit code')
       return
     }
+    
     setLoading(true)
     setError(null)
+    
     try {
-      await new Promise((r) => setTimeout(r, 800))
+      const { error: verifyError, user } = await verifyPhoneOtp(phone, otp)
+      
+      if (verifyError || !user) {
+        throw new Error(verifyError?.message || 'Verification failed')
+      }
+      
+      if (supabase) {
+        // Upsert driver profile
+        const { data: existingDriver } = await supabase
+          .from('drivers')
+          .select('id')
+          .eq('id', user.id)
+          .maybeSingle()
+
+        if (!existingDriver) {
+          await supabase.from('drivers').insert({
+            id: user.id,
+            phone: phone,
+          })
+          
+          await supabase.from('driver_wallets').insert({
+            driver_id: user.id,
+            balance: 0,
+          })
+        }
+      }
+
       hapticTap()
       localStorage.setItem('borlaboard_role', 'driver')
       navigate('/collector/dashboard', { replace: true })
-    } catch {
-      setError('Verification failed. Try again.')
+    } catch (err: any) {
+      setError(err.message || 'Verification failed. Try again.')
     } finally {
       setLoading(false)
     }
@@ -47,20 +78,20 @@ export default function DriverOtpPage() {
 
       <Card className="space-y-4">
         <Input
-          label="4-digit OTP"
+          label="6-digit OTP"
           inputMode="numeric"
-          maxLength={4}
-          placeholder="0000"
+          maxLength={6}
+          placeholder="000000"
           value={otp}
           leftIcon={NavIcons.outline.otp}
           error={error ?? undefined}
           className="text-center tracking-[0.5em]"
           onChange={(e) => {
-            setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))
+            setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))
             setError(null)
           }}
         />
-        <Button fullWidth loading={loading} onClick={handleVerify}>
+        <Button fullWidth loading={loading} disabled={loading} onClick={handleVerify}>
           Verify & continue
         </Button>
       </Card>
