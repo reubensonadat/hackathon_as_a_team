@@ -26,6 +26,11 @@ export default function SilentResidentBootPage() {
     // Simulate login & initialize device
     setTimeout(() => {
       getOrCreateDeviceId()
+      
+      // Seed mock Google OAuth credentials for onboarding
+      localStorage.setItem('google_mock_name', 'Kofi Mensah')
+      localStorage.setItem('google_mock_email', 'kofi.mensah@gmail.com')
+      
       const onboardingDone = localStorage.getItem('borlaboard_onboarding_complete') === 'true'
       if (onboardingDone) {
         navigate('/client/home')
