@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CityBins - Account Profile</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@300,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-container-high": "#e8e8e8", "on-secondary-container": "#636262", "on-surface": "#1a1c1c", background: "#f9f9f9", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "surface-tint": "#2b6c00", "on-primary-container": "#1e5000", outline: "#6f7b64", "on-error-container": "#93000a", "surface-variant": "#e2e2e2", "on-secondary": "#ffffff", "on-background": "#1a1c1c", tertiary: "#9a397a", "on-primary-fixed-variant": "#1f5100", "surface-container-highest": "#e2e2e2", "secondary-fixed-dim": "#c8c6c5", "on-primary-fixed": "#082100", "surface-dim": "#dadada", primary: "#2b6c00", "on-tertiary": "#ffffff", "inverse-primary": "#6be026", "primary-fixed-dim": "#6be026", "on-primary": "#ffffff", "inverse-on-surface": "#f1f1f1", "tertiary-fixed": "#ffd8eb", "secondary-container": "#e2dfde", surface: "#f9f9f9", "on-tertiary-container": "#7b1f60", secondary: "#5f5e5e", "tertiary-fixed-dim": "#ffaedd", "surface-container-low": "#f4f3f3", error: "#ba1a1a", "primary-container": "#58cc02", "on-tertiary-fixed-variant": "#7d2061", "on-secondary-fixed": "#1b1c1c", "outline-variant": "#becbb1", "on-surface-variant": "#3f4a36", "primary-fixed": "#87fe45", "on-tertiary-fixed": "#3b002c", "on-secondary-fixed-variant": "#474746", "inverse-surface": "#2f3131", "tertiary-container": "#ff8ed4", "surface-bright": "#f9f9f9", "surface-container": "#eeeeee", "error-container": "#ffdad6", "secondary-fixed": "#e5e2e1"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"section-gap": "24px", base: "4px", "stack-loose": "16px", "container-margin": "16px", "stack-compact": "8px", gutter: "12px", xs: "8px", "margin-mobile": "20px", md: "16px", xl: "32px", "gutter-mobile": "12px", sm: "12px", lg: "24px"}, fontFamily: {"display-lg": ["Nunito Sans"], button: ["Inter"], "label-md": ["Nunito Sans"], "body-lg": ["Nunito Sans"], "headline-md": ["Nunito Sans"], "body-sm": ["Inter"], "display-lg-mobile": ["Inter"], "body-md": ["Nunito Sans"], "headline-sm": ["Nunito Sans"], "label-bold": ["Nunito Sans"]}, fontSize: {"display-lg": ["32px", {lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "900"}], button: ["15px", {lineHeight: "20px", letterSpacing: "0", fontWeight: "600"}], "label-md": ["14px", {lineHeight: "1", fontWeight: "700"}], "body-lg": ["18px", {lineHeight: "1.5", fontWeight: "700"}], "headline-md": ["24px", {lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "800"}], "body-sm": ["14px", {lineHeight: "20px", letterSpacing: "0", fontWeight: "400"}], "display-lg-mobile": ["24px", {lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700"}], "body-md": ["16px", {lineHeight: "1.5", fontWeight: "600"}], "headline-sm": ["20px", {lineHeight: "1.2", fontWeight: "800"}], "label-bold": ["14px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "800"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #000000;
+        }
+        
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+            background-color: #ffffff;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-32 font-body-lg">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest w-full top-0 sticky border-b border-surface-variant flex justify-between items-center px-container-margin h-16 w-full z-50">
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined hover:bg-surface-variant p-2 rounded-lg transition-colors duration-150">menu</button>
+<h1 class="font-display-lg-mobile text-display-lg-mobile tracking-tight text-primary">CityBins</h1>
+</div>
+<div class="w-10 h-10 rounded-full border border-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of Marcus V., a man in his late 30s with a warm, reliable expression, wearing industrial-style workwear. The photography is sharp with high contrast, set against a clean, light grey studio background that reflects an efficient and modern urban utility aesthetic. The lighting is bright and even, emphasizing clarity and trustworthiness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYDKWOihRZ41O8uS0w_gFzrgHnoXUDbRq-D8FnQ4vznwcVtq5CteEnnUDoqpB48jNMv3B5ODLuMS8jNagSoeNauBKfc95tV_oZY21FjOdBVVw7fr8_qA1WcsroeDQKAGSFhtnc0DE-mc7rxcbZRqFnzD7-BS6kjbVKfJUNcSnvw2dDMfKqzbt3W6JLntgs2_Tete_eipJcFt0L-ameo1xnr1w1ycEQ7wqTuVDR1z-ABgWPzl1r_Z3b8wJHoNu-sIv-BO2CGfTuhW8"/>
+</div>
+</header>
+<main class="px-container-margin pt-section-gap space-y-section-gap">
+<!-- Profile Header Section -->
+<section class="flex flex-col items-center justify-center text-center space-y-stack-loose bg-surface-container-lowest p-section-gap rounded-lg border border-surface-variant">
+<div class="relative">
+<div class="w-24 h-24 rounded-full border border-surface-variant overflow-hidden bg-white">
+<img class="w-full h-full object-cover" data-alt="A close-up circular avatar of a friendly urban logistics professional. The man has a short beard and is wearing a green branded cap. The background is a crisp, bright white, maintaining the high-contrast industrial-friendly visual style of the CityBins app. The lighting is professional and clear." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO3_yPQsNn7gwF9u_L1dGaexBiMrDeVGiKli2-7aCS7ZvvEvN1TPm2DGxEVwYevHsk2n55ZhRddqP4CLDz0O8z1_2VeTDUhtzHWCMxJRZ_hhznl70UJR1IbdeS6M7OdJ7dRsdf6dJtyIgr35U2HBXbXG1a9YOog_e67Nj6tE0sOHVmkdJL7I-4ae-g0oDqnbwlHV_NwM38IZonV-uik_fi6eXjBBCllpnQzw_7cBcAluHthBa3HtyB82c5sylKDuLb7gyfn-pIqNY"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-surface-container-lowest border border-surface-variant p-1.5 rounded-full shadow-sm hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Marcus V.</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-base">+1 (555) 0123-4567</p>
+</div>
+</section>
+<!-- Profile Settings List -->
+<section class="space-y-stack-compact">
+<!-- Saved Addresses -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-stack-loose flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-stack-loose">
+<span class="material-symbols-outlined text-on-surface-variant">location_on</span>
+<span class="font-body-lg text-body-lg text-on-surface">Saved Addresses</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<!-- Payment Methods -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-stack-loose flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-stack-loose">
+<span class="material-symbols-outlined text-on-surface-variant">credit_card</span>
+<span class="font-body-lg text-body-lg text-on-surface">Payment Methods</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<!-- Push Notifications (Toggle) -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-stack-loose flex items-center justify-between transition-colors">
+<div class="flex items-center gap-stack-loose">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="font-body-lg text-body-lg text-on-surface">Push Notifications</span>
+</div>
+<div class="flex items-center">
+<input checked="" class="toggle-checkbox hidden" id="toggle_notif" type="checkbox"/>
+<label class="toggle-label w-12 h-6 bg-surface-variant rounded-full relative cursor-pointer transition-colors duration-200" for="toggle_notif">
+<div class="toggle-dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 shadow-sm"></div>
+</label>
+</div>
+</div>
+<!-- Language -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-stack-loose flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-stack-loose">
+<span class="material-symbols-outlined text-on-surface-variant">translate</span>
+<span class="font-body-lg text-body-lg text-on-surface">Language</span>
+</div>
+<div class="flex items-center gap-base">
+<span class="font-label-md text-label-md text-on-surface-variant">English</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Logout Button -->
+<section class="pt-stack-loose">
+<button class="w-full h-12 bg-error text-on-error font-button text-button rounded-lg flex items-center justify-center gap-stack-compact hover:bg-on-error-container transition-colors">
+<span class="material-symbols-outlined">logout</span>
+                Log Out
+            </button>
+<p class="mt-stack-loose text-center font-body-sm text-body-sm text-on-surface-variant">App Version 2.4.0 (Industrial Build)</p>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest border-t border-surface-variant flex justify-around items-center px-4 h-16">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant w-16 h-full hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-[10px] mt-1">Home</span>
+</a>
+<!-- Jobs -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant w-16 h-full hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">format_list_bulleted</span>
+<span class="font-label-md text-[10px] mt-1">Jobs</span>
+</a>
+<!-- Profile (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-primary w-16 h-full transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-[10px] mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for toggles
+        document.getElementById('toggle_notif').addEventListener('change', function() {
+            // Add a small scale bounce when toggled
+            const label = this.nextElementSibling;
+            label.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                label.style.transform = 'scale(1)';
+            }, 100);
+        });
+
+        // Tappable list rows interaction
+        document.querySelectorAll('.cursor-pointer').forEach(row => {
+            row.addEventListener('click', function() {
+                // Future navigation logic
+                console.log('Navigating to:', this.innerText.trim());
+            });
+        });
+    </script>
+</body></html>

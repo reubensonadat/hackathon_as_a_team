@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CityBins - Resident Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#082100",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#7d2061",
+                    "inverse-on-surface": "#f1f1f1",
+                    "primary-fixed": "#87fe45",
+                    "surface-variant": "#e2e2e2",
+                    "on-surface-variant": "#3f4a36",
+                    "on-primary-fixed-variant": "#1f5100",
+                    "secondary-fixed": "#e5e2e1",
+                    "outline": "#6f7b64",
+                    "on-background": "#1a1c1c",
+                    "tertiary": "#9a397a",
+                    "background": "#f9f9f9",
+                    "on-secondary-fixed-variant": "#474746",
+                    "surface-bright": "#f9f9f9",
+                    "surface-dim": "#dadada",
+                    "secondary": "#232323",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "error": "#ba1a1a",
+                    "primary": "#2b6c00",
+                    "surface-tint": "#2b6c00",
+                    "surface-container-low": "#f4f3f3",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary-fixed-dim": "#6be026",
+                    "inverse-surface": "#2f3131",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#1e5000",
+                    "on-tertiary-fixed": "#3b002c",
+                    "secondary-container": "#e2dfde",
+                    "primary-container": "#58cc02",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#6be026",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#eeeeee",
+                    "outline-variant": "#becbb1",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#ffd8eb",
+                    "tertiary-container": "#ff8ed4",
+                    "tertiary-fixed-dim": "#ffaedd",
+                    "on-secondary-container": "#636262",
+                    "on-tertiary-container": "#7b1f60",
+                    "on-secondary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "on-surface": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "on-secondary-fixed": "#1b1c1c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "32px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "base": "4px",
+                    "xs": "8px",
+                    "gutter-mobile": "12px",
+                    "md": "16px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Inter", "sans-serif"],
+                    "headline-md": ["Inter", "sans-serif"],
+                    "body-md": ["Inter", "sans-serif"],
+                    "display-lg": ["Inter", "sans-serif"],
+                    "label-md": ["Inter", "sans-serif"],
+                    "label-bold": ["Inter", "sans-serif"],
+                    "body-lg": ["Inter", "sans-serif"]
+            },
+            "fontSize": {
+                    "headline-sm": ["20px", {"lineHeight": "1.2", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                    "display-lg": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+                    "label-md": ["14px", {"lineHeight": "1", "fontWeight": "600"}],
+                    "label-bold": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #F3F4F6;
+            color: #1a1c1c;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom Toggle Switch Style */
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #58cc02;
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+            background-color: white;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopAppBar Navigation Shell -->
+<header class="w-full top-0 sticky bg-white text-black shadow-sm flex justify-between items-center px-margin-mobile h-16 w-full z-50">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</div>
+<div class="font-display-lg text-display-lg uppercase tracking-tighter text-black">
+            CityBins
+        </div>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young Ghanaian resident in a vibrant modern city setting. The person is smiling, wearing clean casual attire, with a background of blurred urban architecture and lush green trees under bright, direct daylight. The overall aesthetic is clean, high-contrast, and industrial-friendly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgpD-Qut9nhGR3AoYarbHgkEMZT1Ag-_FgUIEAEN3zrOqhe5Kk-k5iLtDxBGrXIecR5AAFR7WRj-p0lReNunGsdZ3KCA6j0fluY9EDDKLK8aBjliY_uNkv4az5CFlnfkevNCiz-fkh62Q9SzO0wgMb2xNnFJsaYTJS7Jqn9fhLXVZR4mr-j4ttAb5JVhHb7Z5PHJq36Pz8MABgfoJbsij1qKwy8uRefR-io4XpjD66pcmt1k3iH2ZYyW9XrgnlS0rV3NOhMJzTXng"/>
+</div>
+</header>
+<main class="flex-1 px-margin-mobile py-lg mb-[100px]">
+<!-- Location Sub-header -->
+<div class="flex items-center gap-xs mb-lg opacity-80">
+<span class="material-symbols-outlined text-gray-600" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-label-bold text-label-bold tracking-widest uppercase text-gray-800">East Legon, Sector 4</span>
+</div>
+<!-- Dashboard Map/Contextual Image -->
+<div class="w-full h-48 rounded-lg shadow-md mb-xl overflow-hidden relative bg-white">
+<div class="absolute inset-0 bg-cover bg-center" data-location="Accra, Ghana" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAvKs_sdtJpqJZME4GrQ066Tf0Qt53N9Ull7Ku36_6F40rCRR-hmL34nIQiw2kcKqIteNBS6V4Tl4H7F05cdnV4FaMhlU79Tkdi2JzRLZpMB6REcFwPDWeeSU-0cPXCHZDrRJKHjoNB1_YYFd87E7_YF07s_fxfB4yT1JSnyyRM3w4q1xKVNX1p6U8OwxPkwsZYn6zp4SU3wK8fRCT2Ygv4-rVPQPLz6KvUeiKn5Mo4bodonhzF8vRzqo5Pf9G68ArSBbqV9aJVNwU')"></div>
+<div class="absolute top-4 right-4 bg-white px-md py-xs rounded-lg shadow-sm font-label-bold text-label-bold text-black">
+                NEXT PICKUP: TUE
+            </div>
+</div>
+<!-- Massive Urgent Request Button -->
+<button class="w-full h-[120px] bg-black text-white rounded-lg shadow-md flex flex-col items-center justify-center gap-base active:translate-y-1 transition-all duration-75 mb-xl" id="requestBtn">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">delete_sweep</span>
+<span class="font-display-lg text-display-lg uppercase text-center leading-tight">Request Immediate Pickup</span>
+</button>
+<!-- Bin Configuration Card -->
+<section class="bg-white rounded-lg shadow-md p-lg space-y-md">
+<div class="flex justify-between items-center">
+<span class="font-headline-sm text-headline-sm text-black">Bin Size</span>
+<span class="material-symbols-outlined text-gray-400">info</span>
+</div>
+<div class="flex items-center justify-between p-base bg-gray-100 rounded-lg">
+<button class="flex-1 py-md font-label-bold text-label-bold rounded-md bg-white shadow-sm text-black">STANDARD</button>
+<button class="flex-1 py-md font-label-bold text-label-bold text-gray-500">EXTRA BAGS</button>
+</div>
+<div class="pt-sm border-t border-gray-200 flex justify-between items-end">
+<div>
+<p class="font-label-md text-label-md text-gray-500 uppercase">Estimated Fee</p>
+<p class="font-display-lg text-display-lg text-black">15 GHS</p>
+</div>
+<div class="pb-base">
+<span class="font-label-bold text-label-bold text-gray-800 uppercase">Pay on Arrival</span>
+</div>
+</div>
+</section>
+<!-- Secondary Info List -->
+<div class="mt-lg space-y-md">
+<div class="flex items-center justify-between p-md bg-white shadow-md rounded-lg">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-gray-600">history</span>
+<span class="font-body-lg text-body-lg text-black">View History</span>
+</div>
+<span class="material-symbols-outlined text-gray-400">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-md bg-white shadow-md rounded-lg">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-gray-600">support_agent</span>
+<span class="font-body-lg text-body-lg text-black">Support Center</span>
+</div>
+<span class="material-symbols-outlined text-gray-400">chevron_right</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 h-[88px] bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-100">
+<!-- HOME (Active) -->
+<a class="flex flex-col items-center justify-center text-black px-4 py-2 scale-105 active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="home_work" style="font-variation-settings: 'FILL' 1;">home_work</span>
+<span class="font-label-bold text-label-bold mt-1">HOME</span>
+</a>
+<!-- JOBS (Inactive) -->
+<a class="flex flex-col items-center justify-center text-gray-400 px-4 py-2 hover:text-black active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="format_list_bulleted">format_list_bulleted</span>
+<span class="font-label-bold text-label-bold mt-1">JOBS</span>
+</a>
+<!-- PROFILE (Inactive) -->
+<a class="flex flex-col items-center justify-center text-gray-400 px-4 py-2 hover:text-black active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-bold text-label-bold mt-1">PROFILE</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for the request button
+        const btn = document.getElementById('requestBtn');
+        btn.addEventListener('click', () => {
+            const originalText = btn.querySelector('span:last-child').textContent;
+            btn.querySelector('span:last-child').textContent = "REQUESTING...";
+            btn.classList.add('bg-gray-800');
+            
+            setTimeout(() => {
+                btn.querySelector('span:last-child').textContent = "REQUEST SENT!";
+                btn.style.backgroundColor = '#333';
+                setTimeout(() => {
+                    btn.querySelector('span:last-child').textContent = originalText;
+                    btn.style.backgroundColor = '';
+                    btn.classList.remove('bg-gray-800');
+                }, 2000);
+            }, 800);
+        });
+
+        // Toggle sizing logic simulation
+        const sizeButtons = document.querySelectorAll('.bg-gray-100 button');
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                sizeButtons.forEach(b => {
+                    b.classList.remove('bg-white', 'shadow-sm', 'text-black');
+                    b.classList.add('text-gray-500');
+                });
+                button.classList.add('bg-white', 'shadow-sm', 'text-black');
+                button.classList.remove('text-gray-500');
+            });
+        });
+    </script>
+</body></html>
