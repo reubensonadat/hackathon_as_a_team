@@ -1,23 +1,27 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { MapPinIcon, Bars3Icon, UserIcon, CheckCircleIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
+import { Link, useNavigate } from 'react-router-dom'
+import { MapPinIcon, Bars3Icon, UserIcon } from '@heroicons/react/24/outline'
 import { AppShell } from '@/components/layout/AppShell'
 import { BottomNav } from '@/components/layout/BottomNav'
-import { Card } from '@/components/ui/Card'
 import { CLIENT_NAV } from '@/lib/constants'
-import { hapticTap } from '@/lib/utils'
-import { PickupRequestSheet } from '@/features/client/PickupRequestSheet'
+import { hapticTap, cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function ClientHomePage() {
-  const [sheetOpen, setSheetOpen] = useState(false)
-  const [activeRequest, setActiveRequest] = useState<any>(null)
-  
-  const name = localStorage.getItem('borlaboard_profile_name') ?? 'Resident'
-  const area = localStorage.getItem('borlaboard_residential_area') ?? 'Amamoma'
-  const address = localStorage.getItem('borlaboard_residential_address') ?? 'Not set'
+export const MOCK_HISTORY = [
+  { id: 'REQ-4811', bins: '1x Residential (Small)', date: '25 Jun 2026', price: 15, status: 'Completed' },
+  { id: 'REQ-4792', bins: '2x Residential (Large)', date: '22 Jun 2026', price: 50, status: 'Completed' },
+  { id: 'REQ-4788', bins: '1x Commercial (Small)', date: '18 Jun 2026', price: 50, status: 'Completed' },
+  { id: 'REQ-4621', bins: '1x Residential (Small)', date: '10 Jun 2026', price: 15, status: 'Completed' },
+]
 
-  // Load active request from localStorage if any
+export default function ClientHomePage() {
+  const navigate = useNavigate()
+  const [activeRequest, setActiveRequest] = useState<any>(null)
+  const [binSize, setBinSize] = useState<'standard' | 'extra'>('standard')
+
+  const area = localStorage.getItem('borlaboard_residential_area') ?? 'East Legon, Sector 4'
+
+  // Load active request from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('citybins_active_request')
     if (saved) {
@@ -29,19 +33,9 @@ export default function ClientHomePage() {
     }
   }, [])
 
-  const handleRequestSubmit = (data: any) => {
-    const newRequest = {
-      ...data,
-      id: 'REQ-' + Math.floor(Math.random() * 9000 + 1000),
-      status: 'pending',
-      timestamp: new Date().toISOString(),
-      area,
-      address
-    }
-    localStorage.setItem('citybins_active_request', JSON.stringify(newRequest))
-    setActiveRequest(newRequest)
-    setSheetOpen(false)
+  const handleRequestImmediatePickup = () => {
     hapticTap()
+    navigate('/client/pickup-details')
   }
 
   const handleCancelRequest = () => {
@@ -50,9 +44,6 @@ export default function ClientHomePage() {
     setActiveRequest(null)
   }
 
-  // Get initials for avatar
-  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-
   return (
     <>
       <AppShell className="pb-32">
@@ -60,200 +51,231 @@ export default function ClientHomePage() {
         <motion.header 
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="sticky top-0 z-30 -mx-4 mb-6 flex items-center justify-between border-b border-[var(--color-border)] bg-white/80 px-4 py-3 backdrop-blur-md"
+          className="sticky top-0 z-30 -mx-4 -mt-4 mb-6 flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3 shadow-sm"
         >
-          <div className="flex items-center gap-3">
-            <button className="flex h-10 w-10 items-center justify-center rounded-full text-emerald-950 active:bg-neutral-100 transition-colors">
-              <Bars3Icon className="h-6 w-6" />
-            </button>
-            <div className="flex items-center gap-1.5">
-              <span className="h-6 w-6 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white">
-                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3 3-3m-3 3V2" />
-                </svg>
-              </span>
-              <span className="text-lg font-black tracking-tight text-emerald-950">CityBins</span>
-            </div>
-          </div>
+          <button className="flex h-10 w-10 items-center justify-center rounded-full text-neutral-800 active:bg-neutral-100 transition-colors">
+            <Bars3Icon className="h-6 w-6 stroke-[2.25]" />
+          </button>
           
-          <Link to="/client/account" className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-white font-bold text-xs shadow-sm hover:opacity-90 transition-opacity">
-            {initials || <UserIcon className="h-4.5 w-4.5" />}
+          <span className="text-xl font-black uppercase tracking-[0.15em] text-neutral-900 select-none">
+            CITYBINS
+          </span>
+          
+          <Link to="/client/account" className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-neutral-300 text-neutral-500 hover:border-neutral-500 transition-colors">
+            <UserIcon className="h-5 w-5" />
           </Link>
         </motion.header>
 
-        {/* Welcome Section */}
-        <div className="mb-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-foreground-muted)]">
-            Welcome back
-          </p>
-          <h1 className="mt-1 text-3xl font-black text-emerald-950">{name}</h1>
-        </div>
-
-        {/* Current Service Area Info Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="mb-4"
-        >
-          <Card padding="md" className="bg-emerald-50/50 border-emerald-500/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-[var(--color-primary)]">
-                  <MapPinIcon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-800">
-                    Current Service Area
-                  </p>
-                  <p className="text-sm font-black text-emerald-950">{area}</p>
-                </div>
-              </div>
-              <span className="bg-emerald-500 text-white text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">
-                Active
-              </span>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* Giant Action Button Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-4"
-        >
-          <Card 
-            variant="interactive" 
-            padding="lg"
-            onClick={() => { hapticTap(); setSheetOpen(true); }}
-            className="bg-gradient-to-br from-emerald-600 to-emerald-800 border-none text-white relative overflow-hidden"
-          >
-            {/* Background elements */}
-            <div className="absolute right-[-20px] bottom-[-20px] opacity-10">
-              <svg className="w-48 h-48" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 4h-3V2.5A1.5 1.5 0 0014.5 1h-5A1.5 1.5 0 008 2.5V4H5a1 1 0 00-1 1v14a4 4 0 004 4h8a4 4 0 004-4V5a1 1 0 00-1-1z" />
-              </svg>
-            </div>
-
-            <div className="relative z-10 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-                  <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-black tracking-tight text-white">Request pickup</h3>
-                  <p className="text-xs font-semibold text-emerald-100">
-                    Snap waste, choose bin sizes, get immediate collection.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center bg-white/10 backdrop-blur-md rounded-xl p-3">
-                <span className="text-xs font-bold text-emerald-50">Standard Residential bin fee</span>
-                <span className="text-sm font-black text-white">GHS 15.00</span>
-              </div>
-
-              <button
-                className="w-full bg-white hover:bg-neutral-50 active:scale-[0.98] transition-transform text-emerald-950 font-black text-sm py-3.5 rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-2"
-              >
-                REQUEST IMMEDIATE PICKUP
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* Active / Current Request status */}
         <AnimatePresence mode="wait">
           {activeRequest ? (
+            /* Active Request Dashboard Alert Card */
             <motion.div
               key="active"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="mt-4"
+              className="space-y-6"
             >
-              <Card className="border-emerald-500 bg-emerald-50/10">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-950 text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
-                      <CheckCircleIcon className="h-3 w-3 text-[var(--color-primary)]" />
-                      Request Posted
+              {/* Radar status card */}
+              <div className="border border-neutral-200 rounded-[28px] bg-white p-5 shadow-sm space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-[#46c300] border border-neutral-200">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#46c300] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-[#46c300]"></span>
                     </span>
-                    <h3 className="text-sm font-black text-emerald-950 mt-2">Active Job: {activeRequest.id}</h3>
-                    <p className="text-xs text-[var(--color-foreground-muted)] font-semibold mt-1">
-                      {activeRequest.bins.map((b: any) => `${b.count}x ${b.type}`).join(', ')}
-                      {activeRequest.spillages && ' (with spillages)'}
-                    </p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs text-[var(--color-foreground-muted)] font-bold">Estimated Cost</span>
-                    <p className="text-base font-black text-emerald-950">
-                      GHS {(activeRequest.bins.reduce((s: any, b: any) => s + (b.count * (b.type === 'Standard Bin' ? 15 : b.type === 'Large Bin' ? 25 : 50)), 0) + (activeRequest.spillages ? 10 : 0)).toFixed(2)}
+                  <div>
+                    <h2 className="text-base font-black text-neutral-900">Active Collection</h2>
+                    <p className="text-xs font-semibold text-neutral-500 mt-0.5 font-sans">
+                      Kwame is currently en route to your residence.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex gap-2.5 mt-4 pt-4 border-t border-[var(--color-border)]">
-                  <Link
-                    to="/client/track"
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-neutral-900 hover:bg-black text-white text-xs font-black py-2.5 rounded-lg active:scale-95 transition-transform"
+                <hr className="border-t border-neutral-200" />
+
+                <div className="flex items-center justify-between text-xs px-1 font-bold text-neutral-700">
+                  <span>Estimated Price</span>
+                  <span className="font-black text-neutral-900">{activeRequest.price ?? 15} GHS</span>
+                </div>
+
+                <div className="space-y-2 pt-2">
+                  <button
+                    onClick={() => { hapticTap(); navigate('/client/track'); }}
+                    className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-xs font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm uppercase"
                   >
-                    <ArrowPathIcon className="h-3.5 w-3.5 animate-spin" />
                     TRACK LIVE
-                  </Link>
+                  </button>
+                  
                   <button
                     onClick={handleCancelRequest}
-                    className="px-4 bg-white border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold py-2.5 rounded-lg active:scale-95 transition-transform cursor-pointer"
+                    className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-neutral-400 hover:text-red-650 transition-colors py-1.5 cursor-pointer"
                   >
-                    CANCEL
+                    CANCEL REQUEST
                   </button>
                 </div>
-              </Card>
+              </div>
             </motion.div>
           ) : (
+            /* Normal Dashboard View */
             <motion.div
-              key="empty"
+              key="normal"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="mt-4"
+              className="space-y-6"
             >
-              <Card>
-                <Card.Header>
-                  <Card.Title>Active request</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                  <p className="text-xs font-semibold text-[var(--color-foreground-muted)]">
-                    No active request right now. Request a pickup to see status details here.
-                  </p>
-                  <Link
-                    to="/client/track"
-                    className="mt-3 inline-block text-xs font-black text-[var(--color-primary)] hover:underline"
-                  >
-                    Go to Track →
-                  </Link>
-                </Card.Body>
-              </Card>
+              {/* Current Service Area Card */}
+              <div className="border border-neutral-200 bg-white p-4 rounded-[28px] shadow-sm flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-neutral-800 border border-neutral-200">
+                    <MapPinIcon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest">
+                      CURRENT SERVICE AREA
+                    </p>
+                    <p className="text-[15px] font-black text-neutral-900 mt-0.5">{area}</p>
+                  </div>
+                </div>
+                
+                <Link
+                  to="/onboarding/residential"
+                  onClick={hapticTap}
+                  className="text-xs font-bold uppercase tracking-wider text-neutral-900 hover:underline"
+                >
+                  CHANGE
+                </Link>
+              </div>
+
+              {/* Giant Request Button Card */}
+              <button
+                onClick={handleRequestImmediatePickup}
+                className="w-full bg-[#46c300] hover:bg-[#3ea900] active:scale-[0.98] transition-all duration-100 border border-neutral-200 py-8 rounded-[28px] cursor-pointer text-center flex flex-col items-center justify-center shadow-sm"
+              >
+                <div className="flex items-center gap-1.5 mb-2">
+                  {/* Trash Icon */}
+                  <svg className="h-9 w-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7M5 7h14m-14 0h14m-9-3h4a1 1 0 011 1v2H9V4a1 1 0 011-1z" />
+                  </svg>
+                  {/* List Lines */}
+                  <div className="flex flex-col gap-1">
+                    <span className="h-[3.5px] w-4 bg-white rounded-full" />
+                    <span className="h-[3.5px] w-6 bg-white rounded-full" />
+                    <span className="h-[3.5px] w-4 bg-white rounded-full" />
+                  </div>
+                </div>
+                <span className="text-2xl font-black uppercase tracking-tight text-white leading-none">
+                  REQUEST<br />IMMEDIATE<br />PICKUP
+                </span>
+              </button>
+
+              {/* Pickup Details Card */}
+              <div className="border border-neutral-200 bg-white p-5 rounded-[28px] shadow-sm space-y-4">
+                <div>
+                  <h3 className="text-base font-black text-neutral-900 uppercase tracking-tight">
+                    Pickup Details
+                  </h3>
+                  <hr className="border-t border-neutral-200 mt-2.5" />
+                </div>
+
+                {/* Bin Size Selector */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-neutral-800">
+                      Bin Size
+                    </span>
+                    {/* Toggle Slider Switch */}
+                    <div 
+                      onClick={() => {
+                        hapticTap();
+                        setBinSize(prev => prev === 'standard' ? 'extra' : 'standard');
+                      }}
+                      className="w-14 h-7 rounded-full bg-[#46c300] relative cursor-pointer border border-neutral-900 shadow-sm"
+                    >
+                      <div 
+                        className={cn(
+                          "h-5 w-5 rounded-full bg-neutral-900 flex items-center justify-center text-white transition-all duration-200 absolute top-[2px] shadow-md border border-neutral-900",
+                          binSize === 'standard' ? 'left-[3px]' : 'left-[29px]'
+                        )}
+                      >
+                        <svg className="h-3 w-3 stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Slider Labels */}
+                  <div className="flex justify-between items-center text-xs px-1">
+                    <span className={cn(
+                      "transition-colors duration-150",
+                      binSize === 'standard' ? 'font-bold text-neutral-900' : 'font-medium text-neutral-400'
+                    )}>
+                      Standard
+                    </span>
+                    <span className={cn(
+                      "transition-colors duration-150",
+                      binSize === 'extra' ? 'font-bold text-neutral-900' : 'font-medium text-neutral-400'
+                    )}>
+                      Extra Bags
+                    </span>
+                  </div>
+                </div>
+
+                {/* Estimated Fee Box */}
+                <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-4 flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500">
+                    ESTIMATED FEE
+                  </span>
+                  <span className="text-xl font-black text-neutral-900">
+                    {binSize === 'standard' ? '15 GHS' : '25 GHS'}
+                  </span>
+                </div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Recent Pickups History Section */}
+        <div className="mt-8 space-y-3">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+            Recent Pickups
+          </label>
+          <div className="space-y-4">
+            {MOCK_HISTORY.slice(0, 3).map((item) => (
+              <div 
+                key={item.id} 
+                className="border border-neutral-200 bg-white p-4 rounded-[28px] shadow-sm flex items-center justify-between gap-4"
+              >
+                <div>
+                  <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block">
+                    {item.id}
+                  </span>
+                  <span className="text-sm font-bold text-neutral-900 mt-1 block">
+                    {item.bins}
+                  </span>
+                  <span className="text-[10px] font-medium text-neutral-400 mt-0.5 block">
+                    {item.date}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-sm font-black text-neutral-900 block">
+                    {item.price} GHS
+                  </span>
+                  <span className="inline-flex items-center gap-1 bg-neutral-150 text-neutral-705 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mt-1.5 border border-neutral-200">
+                    {item.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </AppShell>
 
       {/* Bottom Nav */}
       <BottomNav items={CLIENT_NAV} />
-
-      {/* Bottom Sheet Details */}
-      <PickupRequestSheet
-        open={sheetOpen}
-        onClose={() => setSheetOpen(false)}
-        onSubmit={handleRequestSubmit}
-      />
     </>
   )
 }

@@ -55,7 +55,7 @@ export function BottomNav({ items }: BottomNavProps) {
         <div
           className={cn(
             "absolute h-11 rounded-xl",
-            isDark ? "bg-[#D4F84B]" : "bg-[var(--color-primary)]"
+            isDark ? "bg-[#46c300]" : "bg-[var(--color-primary)]"
           )}
           style={{
             left: `${pillStyle.left}px`,
