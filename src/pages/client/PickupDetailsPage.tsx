@@ -151,13 +151,13 @@ export default function PickupDetailsPage() {
         <motion.header 
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="sticky top-0 z-30 -mx-4 mb-6 flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3 shadow-sm"
+          className="sticky top-0 z-30 -mx-4 -mt-4 mb-6 flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3 shadow-sm"
         >
           <button className="flex h-10 w-10 items-center justify-center rounded-full text-neutral-800 active:bg-neutral-100 transition-colors">
             <Bars3Icon className="h-6 w-6 stroke-[2.25]" />
           </button>
           
-          <span className="text-xl font-black uppercase tracking-[0.15em] text-[#46c300] select-none">
+          <span className="text-xl font-black uppercase tracking-[0.15em] text-neutral-900 select-none">
             CITYBINS
           </span>
           
@@ -183,7 +183,7 @@ export default function PickupDetailsPage() {
         >
           {/* Bin Types & Quantities */}
           <div className="space-y-2">
-            <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
               Bin Types & Quantities
             </label>
             <div className="grid grid-cols-2 gap-4">
@@ -195,19 +195,19 @@ export default function PickupDetailsPage() {
                   <div
                     key={cat.id}
                     className={cn(
-                      "relative border-2 border-neutral-950 bg-white p-4 rounded-xl shadow-[4px_4px_0px_0px_#171717] flex flex-col justify-between transition-all duration-100",
-                      isSelected && "bg-emerald-50/50"
+                      "relative border bg-white p-4 rounded-[28px] shadow-sm flex flex-col justify-between transition-all duration-100 min-h-[140px]",
+                      isSelected ? "bg-[#46c300] border-neutral-900" : "border-neutral-200"
                     )}
                   >
                     {/* Top Row: Icon & Checkbox */}
                     <div className="flex items-center justify-between">
-                      <Icon className="h-7 w-7 text-[#46c300]" />
+                      <Icon className={cn("h-7 w-7", isSelected ? "text-white" : "text-[#46c300]")} />
                       <div 
                         className={cn(
-                          "h-5 w-5 rounded border-2 flex items-center justify-center transition-colors cursor-pointer",
+                          "h-5 w-5 rounded border flex items-center justify-center transition-colors cursor-pointer",
                           isSelected 
-                            ? "border-neutral-950 bg-[#46c300]" 
-                            : "border-neutral-400 bg-white"
+                            ? "border-neutral-950 bg-neutral-950 text-[#46c300]" 
+                            : "border-neutral-350 bg-white"
                         )}
                         onClick={() => {
                           if (isSelected) {
@@ -219,7 +219,7 @@ export default function PickupDetailsPage() {
                         }}
                       >
                         {isSelected && (
-                          <svg className="h-3 w-3 text-neutral-950 stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="h-3 w-3 text-[#46c300] stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         )}
@@ -228,10 +228,10 @@ export default function PickupDetailsPage() {
 
                     {/* Middle: Labels */}
                     <div className="mt-4 mb-3">
-                      <p className="text-xs font-black text-neutral-900 leading-tight">
+                      <p className={cn("text-xs font-black leading-tight", isSelected ? "text-white" : "text-neutral-900")}>
                         {cat.name}
                       </p>
-                      <p className="text-xs font-black text-neutral-900 leading-tight mt-0.5">
+                      <p className={cn("text-xs font-black leading-tight mt-0.5", isSelected ? "text-white" : "text-neutral-900")}>
                         {cat.sub}
                       </p>
                     </div>
@@ -243,14 +243,20 @@ export default function PickupDetailsPage() {
                       <button
                         onClick={() => handleDecrement(cat.id)}
                         disabled={count === 0}
-                        className="h-8 w-8 rounded border-2 border-neutral-950 bg-white hover:bg-neutral-50 active:scale-95 transition-transform flex items-center justify-center font-bold text-neutral-950 disabled:opacity-30 disabled:cursor-not-allowed"
+                        className={cn(
+                          "h-8 w-8 rounded border bg-white hover:bg-neutral-50 active:scale-95 transition-transform flex items-center justify-center font-bold text-neutral-950 disabled:opacity-30 disabled:cursor-not-allowed",
+                          isSelected ? "border-neutral-900 bg-neutral-950/5 hover:bg-neutral-950/15" : "border-neutral-300"
+                        )}
                       >
                         -
                       </button>
-                      <span className="text-sm font-black text-neutral-900">{count}</span>
+                      <span className={cn("text-sm font-black", isSelected ? "text-white" : "text-neutral-900")}>{count}</span>
                       <button
                         onClick={() => handleIncrement(cat.id)}
-                        className="h-8 w-8 rounded border-2 border-neutral-950 bg-white hover:bg-neutral-50 active:scale-95 transition-transform flex items-center justify-center font-bold text-neutral-950"
+                        className={cn(
+                          "h-8 w-8 rounded border bg-white hover:bg-neutral-50 active:scale-95 transition-transform flex items-center justify-center font-bold text-neutral-950",
+                          isSelected ? "border-neutral-900 bg-neutral-950/5 hover:bg-neutral-950/15" : "border-neutral-300"
+                        )}
                       >
                         +
                       </button>
@@ -263,17 +269,17 @@ export default function PickupDetailsPage() {
 
           {/* Spillages Toggle */}
           <div className="space-y-2">
-            <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
               Are there spillages?
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => { hapticTap(); setSpillages(true); }}
                 className={cn(
-                  "py-3.5 rounded-xl border-2 border-neutral-950 font-black text-sm transition-all duration-100 cursor-pointer text-center",
+                  "py-3.5 rounded-2xl border font-bold text-sm transition-all duration-100 cursor-pointer text-center",
                   spillages 
-                    ? "bg-[#46c300] text-neutral-950 shadow-[4px_4px_0px_0px_#171717]" 
-                    : "bg-white text-neutral-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] active:translate-y-[1px] active:translate-x-[1px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]"
+                    ? "bg-[#46c300] text-white border-neutral-900 shadow-sm" 
+                    : "bg-white text-neutral-600 border-neutral-200 shadow-sm hover:bg-neutral-50"
                 )}
               >
                 YES
@@ -281,10 +287,10 @@ export default function PickupDetailsPage() {
               <button
                 onClick={() => { hapticTap(); setSpillages(false); }}
                 className={cn(
-                  "py-3.5 rounded-xl border-2 border-neutral-950 font-black text-sm transition-all duration-100 cursor-pointer text-center",
+                  "py-3.5 rounded-2xl border font-bold text-sm transition-all duration-100 cursor-pointer text-center",
                   !spillages 
-                    ? "bg-[#46c300] text-neutral-950 shadow-[4px_4px_0px_0px_#171717]" 
-                    : "bg-white text-neutral-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] active:translate-y-[1px] active:translate-x-[1px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]"
+                    ? "bg-[#46c300] text-white border-neutral-900 shadow-sm" 
+                    : "bg-white text-neutral-600 border-neutral-200 shadow-sm hover:bg-neutral-50"
                 )}
               >
                 NO
@@ -294,20 +300,20 @@ export default function PickupDetailsPage() {
 
           {/* Visual Context upload area */}
           <div className="space-y-2">
-            <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
               Visual Context (Optional)
             </label>
             
             <div 
               onClick={handlePhotoUpload}
               className={cn(
-                "relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#46c300] bg-emerald-50/50 p-6 text-center cursor-pointer transition-all duration-100 shadow-[4px_4px_0px_0px_#171717]",
+                "relative flex flex-col items-center justify-center rounded-[28px] border-2 border-dashed border-[#46c300] bg-emerald-50/10 p-6 text-center cursor-pointer transition-all duration-100 shadow-sm",
                 photo && "border-solid bg-white"
               )}
             >
               {uploading ? (
                 <div className="flex flex-col items-center py-4">
-                  <div className="h-8 w-8 animate-spin rounded-full border-3 border-neutral-950 border-t-transparent mb-2" />
+                  <div className="h-8 w-8 animate-spin rounded-full border-3 border-black border-t-transparent mb-2" />
                   <span className="text-xs font-bold text-neutral-800">Uploading photo...</span>
                 </div>
               ) : photo ? (
@@ -319,15 +325,15 @@ export default function PickupDetailsPage() {
                   />
                   <button
                     onClick={handleRemovePhoto}
-                    className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-white shadow-md active:scale-90 hover:bg-red-700 transition-colors border border-neutral-950"
+                    className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-white shadow-md active:scale-90 hover:bg-red-700 transition-colors border border-neutral-200"
                   >
                     <TrashIcon className="h-4.5 w-4.5" />
                   </button>
                 </div>
               ) : (
                 <div className="py-2 flex flex-col items-center justify-center text-center">
-                  <div className="h-12 w-12 rounded-full bg-[#46c300] border-2 border-neutral-950 flex items-center justify-center mb-2 shadow-sm">
-                    <CameraIcon className="h-6 w-6 text-neutral-950 stroke-[2.5]" />
+                  <div className="h-12 w-12 rounded-full bg-[#46c300] border border-neutral-200 flex items-center justify-center mb-2 shadow-sm">
+                    <CameraIcon className="h-6 w-6 text-white stroke-[2.5]" />
                   </div>
                   <span className="block text-xs font-black text-neutral-900 mt-1">Take a Photo of the Bins</span>
                 </div>
@@ -341,7 +347,7 @@ export default function PickupDetailsPage() {
         <div className="mx-auto max-w-lg">
           <button 
             onClick={handleContinueRequest}
-            className="w-full shadow-[4px_4px_0px_0px_#171717] bg-[#46c300] hover:bg-[#3ea900] active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_0px_#171717] transition-all duration-100 border-2 border-neutral-950 font-black py-4 rounded-xl text-neutral-950 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
             CONTINUE TO REQUEST
             <ArrowRightIcon className="h-4 w-4 stroke-[2.5]" />

@@ -49,15 +49,15 @@ export default function ResidentialPage() {
   return (
     <AppShell className="pb-36">
       {/* Brand Header Logo */}
-      <motion.div
+      <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-center mb-6"
+        className="sticky top-0 z-30 -mx-4 -mt-4 mb-6 flex items-center justify-center border-b border-neutral-200 bg-white py-4 shadow-sm"
       >
-        <span className="text-xl font-black uppercase tracking-[0.15em] text-[#46c300]">
+        <span className="text-xl font-black uppercase tracking-[0.15em] text-neutral-900 select-none">
           CITYBINS
         </span>
-      </motion.div>
+      </motion.header>
 
       <motion.div 
         initial={{ opacity: 0, y: 15 }}
@@ -65,7 +65,7 @@ export default function ResidentialPage() {
         transition={{ duration: 0.4 }}
         className="mb-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-neutral-500">
+        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-neutral-400">
           Step 2 of 2
         </p>
         <h1 className="mt-1 text-3xl font-black text-neutral-900">Set Up Location</h1>
@@ -82,7 +82,7 @@ export default function ResidentialPage() {
       >
         {/* Property Type Selector */}
         <div className="space-y-2">
-          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
             PROPERTY TYPE
           </label>
           <div className="grid grid-cols-3 gap-3">
@@ -96,13 +96,13 @@ export default function ResidentialPage() {
                     hapticTap()
                     setPropertyType(type.id)
                   }}
-                  className={`flex flex-col items-center justify-center py-5 rounded-xl border-2 border-neutral-950 transition-all duration-100 cursor-pointer text-center ${
+                  className={`flex flex-col items-center justify-center py-5 rounded-2xl border transition-all duration-100 cursor-pointer text-center ${
                     isSelected
-                      ? 'bg-emerald-50 text-[var(--color-primary)] shadow-[4px_4px_0px_0px_#171717] translate-y-0 translate-x-0'
-                      : 'bg-white text-neutral-500 hover:bg-neutral-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]'
+                      ? 'bg-[#46c300] border-neutral-900 text-white font-bold shadow-sm'
+                      : 'bg-white border-neutral-200 text-neutral-500 hover:bg-neutral-50 shadow-sm'
                   }`}
                 >
-                  <Icon className={`h-7 w-7 mb-2 stroke-[2.25] ${isSelected ? 'text-[var(--color-primary)]' : 'text-neutral-400'}`} />
+                  <Icon className={`h-7 w-7 mb-2 stroke-[2.25] ${isSelected ? 'text-white' : 'text-neutral-400'}`} />
                   <span className="text-xs font-black tracking-tight uppercase">{type.name}</span>
                 </button>
               )
@@ -112,15 +112,15 @@ export default function ResidentialPage() {
 
         {/* Select Area Dropdown */}
         <div className="space-y-2">
-          <label htmlFor="area" className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+          <label htmlFor="area" className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
             SELECT AREA
           </label>
-          <div className="relative flex items-center rounded-xl border-2 border-neutral-950 bg-white shadow-[4px_4px_0px_0px_#171717]">
+          <div className="relative flex items-center rounded-2xl border border-neutral-200 bg-white shadow-sm">
             <select
               id="area"
               value={area}
               onChange={(e) => setArea(e.target.value)}
-              className="w-full rounded-xl bg-transparent py-4 px-4 text-[15px] font-bold text-neutral-900 outline-none appearance-none cursor-pointer"
+              className="w-full rounded-2xl bg-transparent py-4 px-4 text-[15px] font-semibold text-neutral-900 outline-none appearance-none cursor-pointer"
             >
               <option value="" disabled>Choose your area...</option>
               <option value="Amamoma">Amamoma</option>
@@ -137,21 +137,21 @@ export default function ResidentialPage() {
 
         {/* Street Name input */}
         <div className="space-y-2">
-          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
             STREET NAME
           </label>
           <div
             className={cn(
-              "relative flex items-center rounded-xl border-2 border-neutral-950 bg-white shadow-[4px_4px_0px_0px_#171717] transition-all duration-100",
-              streetFocused && "translate-y-[1px] translate-x-[1px] shadow-[2px_2px_0px_0px_#171717]",
-              error && "border-red-500 shadow-[4px_4px_0px_0px_#ef4444]"
+              "relative flex items-center rounded-2xl border border-neutral-200 bg-white shadow-sm transition-all duration-100",
+              streetFocused && "border-neutral-400",
+              error && "border-red-500"
             )}
           >
             <input
               type="text"
               placeholder="e.g. Valco Trust Road"
               value={address}
-              className="flex-1 bg-transparent py-4 px-4 text-[15px] font-bold text-neutral-900 placeholder:text-neutral-400 outline-none"
+              className="flex-1 bg-transparent py-4 px-4 text-[15px] font-semibold text-neutral-900 placeholder:text-neutral-400 outline-none"
               onFocus={() => setStreetFocused(true)}
               onBlur={() => setStreetFocused(false)}
               onChange={(e) => {
@@ -165,20 +165,20 @@ export default function ResidentialPage() {
 
         {/* House Number input */}
         <div className="space-y-2">
-          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
             HOUSE NUMBER (OPTIONAL)
           </label>
           <div
             className={cn(
-              "relative flex items-center rounded-xl border-2 border-neutral-950 bg-white shadow-[4px_4px_0px_0px_#171717] transition-all duration-100",
-              houseFocused && "translate-y-[1px] translate-x-[1px] shadow-[2px_2px_0px_0px_#171717]"
+              "relative flex items-center rounded-2xl border border-neutral-200 bg-white shadow-sm transition-all duration-100",
+              houseFocused && "border-neutral-400"
             )}
           >
             <input
               type="text"
               placeholder="e.g. BLK 4A"
               value={houseNumber}
-              className="flex-1 bg-transparent py-4 px-4 text-[15px] font-bold text-neutral-900 placeholder:text-neutral-400 outline-none"
+              className="flex-1 bg-transparent py-4 px-4 text-[15px] font-semibold text-neutral-900 placeholder:text-neutral-400 outline-none"
               onFocus={() => setHouseFocused(true)}
               onBlur={() => setHouseFocused(false)}
               onChange={(e) => setHouseNumber(e.target.value)}
@@ -187,29 +187,31 @@ export default function ResidentialPage() {
         </div>
 
         {/* Map Preview Card */}
-        <div className="relative h-44 w-full overflow-hidden rounded-xl border-2 border-neutral-950 shadow-[4px_4px_0px_0px_#171717] bg-white">
-          <MapPlaceholder 
-            label="Location coordinates verified on map" 
-            icon={MapPinIcon}
-          />
-          {/* Overlay to show geocoded status */}
-          <div className="absolute top-3 right-3 bg-neutral-900/90 border border-neutral-750 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-[#46c300] animate-pulse" />
-            <span className="text-[9px] font-bold text-white uppercase tracking-wider">GPS Active</span>
+        <div className="relative h-44 w-full overflow-hidden rounded-[28px] border border-neutral-200 bg-white shadow-sm p-1">
+          <div className="w-full h-full rounded-[24px] overflow-hidden relative">
+            <MapPlaceholder 
+              label="Location coordinates verified on map" 
+              icon={MapPinIcon}
+            />
+            {/* Overlay to show geocoded status */}
+            <div className="absolute top-3 right-3 bg-neutral-900/90 border border-neutral-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-[#46c300] animate-pulse" />
+              <span className="text-[9px] font-bold text-white uppercase tracking-wider">GPS Active</span>
+            </div>
           </div>
         </div>
       </motion.div>
 
       {/* Sticky Fixed Bottom Bar for SAVE PROFILE button */}
-      <div className="fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-lg border-t border-neutral-250 p-4 z-40">
+      <div className="fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-lg border-t border-neutral-200 p-4 z-40">
         <div className="mx-auto max-w-lg">
           <button 
             disabled={loading}
             onClick={handleFinish}
-            className="w-full shadow-[4px_4px_0px_0px_#171717] bg-[#46c300] hover:bg-[#3ea900] active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_0px_#171717] transition-all duration-100 border-2 border-neutral-950 font-black py-4 rounded-xl text-neutral-950 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
           >
             {loading ? (
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
             ) : (
               <>
                 <svg className="h-5 w-5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">

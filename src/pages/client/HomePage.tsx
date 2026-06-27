@@ -7,6 +7,13 @@ import { CLIENT_NAV } from '@/lib/constants'
 import { hapticTap, cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 
+export const MOCK_HISTORY = [
+  { id: 'REQ-4811', bins: '1x Residential (Small)', date: '25 Jun 2026', price: 15, status: 'Completed' },
+  { id: 'REQ-4792', bins: '2x Residential (Large)', date: '22 Jun 2026', price: 50, status: 'Completed' },
+  { id: 'REQ-4788', bins: '1x Commercial (Small)', date: '18 Jun 2026', price: 50, status: 'Completed' },
+  { id: 'REQ-4621', bins: '1x Residential (Small)', date: '10 Jun 2026', price: 15, status: 'Completed' },
+]
+
 export default function ClientHomePage() {
   const navigate = useNavigate()
   const [activeRequest, setActiveRequest] = useState<any>(null)
@@ -44,13 +51,13 @@ export default function ClientHomePage() {
         <motion.header 
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="sticky top-0 z-30 -mx-4 mb-6 flex items-center justify-between border-b border-neutral-205 bg-white px-4 py-3 shadow-sm"
+          className="sticky top-0 z-30 -mx-4 -mt-4 mb-6 flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3 shadow-sm"
         >
           <button className="flex h-10 w-10 items-center justify-center rounded-full text-neutral-800 active:bg-neutral-100 transition-colors">
             <Bars3Icon className="h-6 w-6 stroke-[2.25]" />
           </button>
           
-          <span className="text-xl font-black uppercase tracking-[0.15em] text-[#46c300] select-none">
+          <span className="text-xl font-black uppercase tracking-[0.15em] text-neutral-900 select-none">
             CITYBINS
           </span>
           
@@ -70,9 +77,9 @@ export default function ClientHomePage() {
               className="space-y-6"
             >
               {/* Radar status card */}
-              <div className="border-2 border-neutral-950 rounded-xl bg-white p-5 shadow-[4px_4px_0px_0px_#171717] space-y-4">
+              <div className="border border-neutral-200 rounded-[28px] bg-white p-5 shadow-sm space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-[#46c300] border border-emerald-200">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-[#46c300] border border-neutral-200">
                     <span className="relative flex h-3 w-3">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#46c300] opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-[#46c300]"></span>
@@ -96,14 +103,14 @@ export default function ClientHomePage() {
                 <div className="space-y-2 pt-2">
                   <button
                     onClick={() => { hapticTap(); navigate('/client/track'); }}
-                    className="w-full shadow-[2px_2px_0px_0px_#171717] bg-[#46c300] hover:bg-[#3ea900] active:translate-y-[1px] active:translate-x-[1px] active:shadow-[1px_1px_0px_0px_#171717] transition-all duration-100 border-2 border-neutral-950 font-black py-3 rounded-lg text-neutral-950 flex items-center justify-center gap-2 cursor-pointer text-xs uppercase"
+                    className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-xs font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm uppercase"
                   >
                     TRACK LIVE
                   </button>
                   
                   <button
                     onClick={handleCancelRequest}
-                    className="w-full text-center text-[10px] font-black uppercase tracking-wider text-neutral-400 hover:text-red-650 transition-colors py-1.5 cursor-pointer"
+                    className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-neutral-400 hover:text-red-650 transition-colors py-1.5 cursor-pointer"
                   >
                     CANCEL REQUEST
                   </button>
@@ -120,9 +127,9 @@ export default function ClientHomePage() {
               className="space-y-6"
             >
               {/* Current Service Area Card */}
-              <div className="border-2 border-neutral-950 bg-white p-4 rounded-xl shadow-[4px_4px_0px_0px_#171717] flex items-center justify-between gap-4">
+              <div className="border border-neutral-200 bg-white p-4 rounded-[28px] shadow-sm flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-[var(--color-primary)]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-neutral-800 border border-neutral-200">
                     <MapPinIcon className="h-5 w-5" />
                   </div>
                   <div>
@@ -136,7 +143,7 @@ export default function ClientHomePage() {
                 <Link
                   to="/onboarding/residential"
                   onClick={hapticTap}
-                  className="text-xs font-black uppercase tracking-wider text-[#46c300] hover:text-[#3ea900] underline"
+                  className="text-xs font-bold uppercase tracking-wider text-neutral-900 hover:underline"
                 >
                   CHANGE
                 </Link>
@@ -145,27 +152,27 @@ export default function ClientHomePage() {
               {/* Giant Request Button Card */}
               <button
                 onClick={handleRequestImmediatePickup}
-                className="w-full shadow-[4px_4px_0px_0px_#171717] bg-[#46c300] hover:bg-[#3ea900] active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_0px_#171717] transition-all duration-100 border-2 border-neutral-950 py-8 rounded-2xl cursor-pointer text-center flex flex-col items-center justify-center"
+                className="w-full bg-[#46c300] hover:bg-[#3ea900] active:scale-[0.98] transition-all duration-100 border border-neutral-200 py-8 rounded-[28px] cursor-pointer text-center flex flex-col items-center justify-center shadow-sm"
               >
                 <div className="flex items-center gap-1.5 mb-2">
                   {/* Trash Icon */}
-                  <svg className="h-9 w-9 text-neutral-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                  <svg className="h-9 w-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7M5 7h14m-14 0h14m-9-3h4a1 1 0 011 1v2H9V4a1 1 0 011-1z" />
                   </svg>
                   {/* List Lines */}
                   <div className="flex flex-col gap-1">
-                    <span className="h-[3.5px] w-4 bg-neutral-950 rounded-full" />
-                    <span className="h-[3.5px] w-6 bg-neutral-950 rounded-full" />
-                    <span className="h-[3.5px] w-4 bg-neutral-950 rounded-full" />
+                    <span className="h-[3.5px] w-4 bg-white rounded-full" />
+                    <span className="h-[3.5px] w-6 bg-white rounded-full" />
+                    <span className="h-[3.5px] w-4 bg-white rounded-full" />
                   </div>
                 </div>
-                <span className="text-2xl font-black uppercase tracking-tight text-neutral-950 leading-none">
+                <span className="text-2xl font-black uppercase tracking-tight text-white leading-none">
                   REQUEST<br />IMMEDIATE<br />PICKUP
                 </span>
               </button>
 
               {/* Pickup Details Card */}
-              <div className="border-2 border-neutral-950 bg-white p-5 rounded-2xl shadow-[4px_4px_0px_0px_#171717] space-y-4">
+              <div className="border border-neutral-200 bg-white p-5 rounded-[28px] shadow-sm space-y-4">
                 <div>
                   <h3 className="text-base font-black text-neutral-900 uppercase tracking-tight">
                     Pickup Details
@@ -185,11 +192,11 @@ export default function ClientHomePage() {
                         hapticTap();
                         setBinSize(prev => prev === 'standard' ? 'extra' : 'standard');
                       }}
-                      className="w-14 h-7 rounded-full bg-[#46c300] relative cursor-pointer border border-neutral-950 shadow-sm"
+                      className="w-14 h-7 rounded-full bg-[#46c300] relative cursor-pointer border border-neutral-900 shadow-sm"
                     >
                       <div 
                         className={cn(
-                          "h-5 w-5 rounded-full bg-[#1b64da] flex items-center justify-center text-white transition-all duration-200 absolute top-[2px] shadow-md border border-neutral-950",
+                          "h-5 w-5 rounded-full bg-neutral-900 flex items-center justify-center text-white transition-all duration-200 absolute top-[2px] shadow-md border border-neutral-900",
                           binSize === 'standard' ? 'left-[3px]' : 'left-[29px]'
                         )}
                       >
@@ -204,13 +211,13 @@ export default function ClientHomePage() {
                   <div className="flex justify-between items-center text-xs px-1">
                     <span className={cn(
                       "transition-colors duration-150",
-                      binSize === 'standard' ? 'font-black text-neutral-900' : 'font-semibold text-neutral-400'
+                      binSize === 'standard' ? 'font-bold text-neutral-900' : 'font-medium text-neutral-400'
                     )}>
                       Standard
                     </span>
                     <span className={cn(
                       "transition-colors duration-150",
-                      binSize === 'extra' ? 'font-black text-neutral-900' : 'font-semibold text-neutral-400'
+                      binSize === 'extra' ? 'font-bold text-neutral-900' : 'font-medium text-neutral-400'
                     )}>
                       Extra Bags
                     </span>
@@ -218,7 +225,7 @@ export default function ClientHomePage() {
                 </div>
 
                 {/* Estimated Fee Box */}
-                <div className="bg-neutral-100 border border-neutral-300 rounded-xl p-4 flex items-center justify-between">
+                <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-4 flex items-center justify-between">
                   <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500">
                     ESTIMATED FEE
                   </span>
@@ -230,6 +237,41 @@ export default function ClientHomePage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Recent Pickups History Section */}
+        <div className="mt-8 space-y-3">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+            Recent Pickups
+          </label>
+          <div className="space-y-4">
+            {MOCK_HISTORY.slice(0, 3).map((item) => (
+              <div 
+                key={item.id} 
+                className="border border-neutral-200 bg-white p-4 rounded-[28px] shadow-sm flex items-center justify-between gap-4"
+              >
+                <div>
+                  <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block">
+                    {item.id}
+                  </span>
+                  <span className="text-sm font-bold text-neutral-900 mt-1 block">
+                    {item.bins}
+                  </span>
+                  <span className="text-[10px] font-medium text-neutral-400 mt-0.5 block">
+                    {item.date}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-sm font-black text-neutral-900 block">
+                    {item.price} GHS
+                  </span>
+                  <span className="inline-flex items-center gap-1 bg-neutral-150 text-neutral-705 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mt-1.5 border border-neutral-200">
+                    {item.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </AppShell>
 
       {/* Bottom Nav */}

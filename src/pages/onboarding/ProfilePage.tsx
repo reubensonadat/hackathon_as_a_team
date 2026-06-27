@@ -39,15 +39,15 @@ export default function ProfilePage() {
   return (
     <AppShell>
       {/* Brand Header Logo */}
-      <motion.div
+      <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-center mb-6"
+        className="sticky top-0 z-30 -mx-4 -mt-4 mb-6 flex items-center justify-center border-b border-neutral-200 bg-white py-4 shadow-sm"
       >
-        <span className="text-xl font-black uppercase tracking-[0.15em] text-[#46c300]">
+        <span className="text-xl font-black uppercase tracking-[0.15em] text-neutral-900 select-none">
           CITYBINS
         </span>
-      </motion.div>
+      </motion.header>
 
       <motion.div 
         initial={{ opacity: 0, y: 15 }}
@@ -55,7 +55,7 @@ export default function ProfilePage() {
         transition={{ duration: 0.4 }}
         className="mb-8"
       >
-        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-neutral-500">
+        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-neutral-400">
           Step 1 of 2
         </p>
         <h1 className="mt-1 text-3xl font-black text-neutral-900">Complete Your Profile</h1>
@@ -72,13 +72,13 @@ export default function ProfilePage() {
       >
         {/* Read Only Name */}
         <div className="w-full space-y-1.5">
-          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
             Full Name (From Google)
           </label>
-          <div className="relative flex items-center rounded-xl border-2 border-neutral-950 bg-neutral-100 px-4 py-3.5 text-neutral-600 shadow-[4px_4px_0px_0px_#171717]">
-            <UserIcon className="h-5 w-5 mr-3 shrink-0 text-neutral-400" />
+          <div className="relative flex items-center rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 text-neutral-600 shadow-sm">
+            <UserIcon className="h-5 w-5 mr-3 shrink-0 text-neutral-450" />
             <span className="text-[15px] font-bold">{fullName}</span>
-            <span className="absolute right-4 text-[9px] font-bold uppercase tracking-wider text-neutral-400 bg-neutral-200 px-2 py-0.5 rounded-md border border-neutral-300">
+            <span className="absolute right-4 text-[9px] font-bold uppercase tracking-wider text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-md border border-neutral-200">
               Locked
             </span>
           </div>
@@ -86,13 +86,13 @@ export default function ProfilePage() {
 
         {/* Read Only Email */}
         <div className="w-full space-y-1.5">
-          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
             Email Address (From Google)
           </label>
-          <div className="relative flex items-center rounded-xl border-2 border-neutral-950 bg-neutral-100 px-4 py-3.5 text-neutral-600 shadow-[4px_4px_0px_0px_#171717]">
-            <EnvelopeIcon className="h-5 w-5 mr-3 shrink-0 text-neutral-400" />
+          <div className="relative flex items-center rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 text-neutral-600 shadow-sm">
+            <EnvelopeIcon className="h-5 w-5 mr-3 shrink-0 text-neutral-450" />
             <span className="text-[15px] font-bold">{email}</span>
-            <span className="absolute right-4 text-[9px] font-bold uppercase tracking-wider text-neutral-400 bg-neutral-200 px-2 py-0.5 rounded-md border border-neutral-300">
+            <span className="absolute right-4 text-[9px] font-bold uppercase tracking-wider text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-md border border-neutral-200">
               Locked
             </span>
           </div>
@@ -100,14 +100,14 @@ export default function ProfilePage() {
 
         {/* Chunky Phone input */}
         <div className="w-full space-y-1.5">
-          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-800">
+          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
             Phone Number
           </label>
           <div
             className={cn(
-              "relative flex items-center rounded-xl border-2 border-neutral-950 bg-white shadow-[4px_4px_0px_0px_#171717] transition-all duration-100",
-              phoneFocused && "translate-y-[1px] translate-x-[1px] shadow-[2px_2px_0px_0px_#171717]",
-              error && "border-red-500 shadow-[4px_4px_0px_0px_#ef4444]"
+              "relative flex items-center rounded-2xl border border-neutral-200 bg-white shadow-sm transition-all duration-100",
+              phoneFocused && "border-neutral-400",
+              error && "border-red-500"
             )}
           >
             <div className="pl-4 shrink-0">
@@ -117,7 +117,7 @@ export default function ProfilePage() {
               type="tel"
               placeholder="+233 XX XXX XXXX"
               value={phone}
-              className="flex-1 bg-transparent py-4 px-3 text-[17px] font-black text-neutral-900 placeholder:text-neutral-400 outline-none tracking-wide"
+              className="flex-1 bg-transparent py-4 px-3 text-[17px] font-semibold text-neutral-900 placeholder:text-neutral-400 outline-none tracking-wide"
               onFocus={() => setPhoneFocused(true)}
               onBlur={() => setPhoneFocused(false)}
               onChange={(e) => {
@@ -132,7 +132,7 @@ export default function ProfilePage() {
             />
           </div>
           {error && <p className="text-[12px] font-bold text-red-500 mt-1">{error}</p>}
-          <p className="text-[10px] text-neutral-500 font-semibold mt-1">
+          <p className="text-[10px] text-neutral-400 font-semibold mt-1">
             Required for pickup coordination and mobile money billing.
           </p>
         </div>
@@ -141,21 +141,21 @@ export default function ProfilePage() {
         <div className="pt-2">
           <button
             onClick={handleContinue}
-            className="w-full shadow-[4px_4px_0px_0px_#171717] bg-[#46c300] hover:bg-[#3ea900] active:translate-y-[2px] active:translate-x-[2px] active:shadow-[2px_2px_0px_0px_#171717] transition-all duration-100 border-2 border-neutral-950 font-black py-4 rounded-xl text-neutral-950 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
             CONTINUE TO LOCATION
           </button>
         </div>
 
         {/* Sign up as a Driver Link Section */}
-        <div className="mt-8 text-center bg-white p-5 rounded-xl border-2 border-neutral-950 shadow-[4px_4px_0px_0px_#171717]">
+        <div className="mt-8 text-center bg-white p-5 rounded-2xl border border-neutral-200 shadow-sm">
           <p className="text-xs font-bold text-neutral-800">
             Want to collect waste and earn money instead?
           </p>
           <Link
             to="/auth/phone"
             onClick={hapticTap}
-            className="mt-3 inline-flex items-center gap-1.5 text-sm font-black text-[#46c300] hover:text-[#3ea900] transition-colors"
+            className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-neutral-900 hover:underline transition-colors"
           >
             Sign up as a Driver
             <ArrowRightIcon className="h-4 w-4" />
