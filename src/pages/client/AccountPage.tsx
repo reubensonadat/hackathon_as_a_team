@@ -129,7 +129,7 @@ export default function ClientAccountPage() {
               >
                 <div 
                   className={cn(
-                    "h-5 w-5 rounded-full bg-white transition-all duration-150 absolute top-[2px] shadow border border-neutral-350",
+                    "h-5 w-5 rounded-full bg-white transition-all duration-150 absolute top-[2px] shadow border border-neutral-350", 
                     pushEnabled ? "left-[23px]" : "left-[3px]"
                   )}
                 />
