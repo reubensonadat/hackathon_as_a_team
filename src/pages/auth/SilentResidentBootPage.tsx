@@ -21,11 +21,11 @@ export default function SilentResidentBootPage() {
     }
   }, [navigate])
 
-  function handleGoogleLogin() {
+  function handleResidentContinue() {
     setLoading(true)
-    // Simulate login & initialize device
     setTimeout(() => {
       getOrCreateDeviceId()
+      localStorage.setItem('borlaboard_role', 'resident')
       const onboardingDone = localStorage.getItem('borlaboard_onboarding_complete') === 'true'
       if (onboardingDone) {
         navigate('/client/home')
@@ -33,7 +33,12 @@ export default function SilentResidentBootPage() {
         navigate('/onboarding/profile')
       }
       setLoading(false)
-    }, 1200)
+    }, 800)
+  }
+
+  function handleDriverLogin() {
+    localStorage.setItem('borlaboard_role', 'driver')
+    navigate('/auth/phone')
   }
 
   return (
@@ -121,24 +126,22 @@ export default function SilentResidentBootPage() {
         className="w-full max-w-sm flex flex-col gap-4 z-10"
       >
         <button
-          onClick={handleGoogleLogin}
+          onClick={handleResidentContinue}
           disabled={loading}
-          className="flex min-h-[54px] w-full items-center justify-center gap-3 rounded-full border border-emerald-200 bg-white px-5 py-3.5 text-[15px] font-bold text-emerald-950 shadow-sm hover:bg-emerald-50 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50"
+          className="flex min-h-[54px] w-full items-center justify-center gap-3 rounded-full border-none bg-emerald-600 px-5 py-3.5 text-[15px] font-black text-white shadow-md shadow-emerald-600/30 hover:bg-emerald-700 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50"
         >
           {loading ? (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-emerald-800 border-t-transparent" />
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
           ) : (
-            <>
-              {/* Google icon path */}
-              <svg className="h-5 w-5" viewBox="0 0 24 24">
-                <path
-                  fill="#EA4335"
-                  d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.183 4.114-3.504 0-6.357-2.852-6.357-6.357s2.853-6.357 6.357-6.357c1.6 0 3.053.587 4.178 1.558l3.053-3.053C19.23 2.164 15.934 1 12.24 1A10.978 10.978 0 001.27 12a10.978 10.978 0 0010.97 11c6.044 0 11.025-4.382 11.025-11 0-.742-.08-1.464-.225-2.143l-10.8 1.428z"
-                />
-              </svg>
-              <span>Continue with Google</span>
-            </>
+            <span>Use App as Resident</span>
           )}
+        </button>
+
+        <button
+          onClick={handleDriverLogin}
+          className="flex min-h-[54px] w-full items-center justify-center gap-3 rounded-full border-2 border-emerald-200 bg-transparent px-5 py-3.5 text-[15px] font-bold text-emerald-800 hover:bg-emerald-50 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+        >
+          <span>Sign In as Collector</span>
         </button>
 
         <div className="text-center">

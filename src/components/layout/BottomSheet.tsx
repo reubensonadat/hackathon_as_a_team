@@ -13,7 +13,7 @@ export function BottomSheet({ open, onClose, title, children }: BottomSheetProps
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-40 flex items-end justify-center">
+        <div className="fixed inset-0 z-[60] flex items-end justify-center">
           <motion.button
             type="button"
             aria-label="Close sheet"
@@ -28,7 +28,7 @@ export function BottomSheet({ open, onClose, title, children }: BottomSheetProps
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 350 }}
-            className="relative z-50 w-full max-w-lg rounded-t-[var(--radius-sheet)] border-t border-[var(--color-border)] bg-[var(--color-surface)] px-6 pb-8 pt-4 shadow-[var(--shadow-strong)]"
+            className="relative z-[70] w-full max-w-lg rounded-t-[var(--radius-sheet)] border-t border-[var(--color-border)] bg-[var(--color-surface)] px-6 pb-8 pt-4 shadow-[var(--shadow-strong)]"
           >
             <div className="mx-auto mb-4 h-1 w-12 rounded-full bg-[var(--color-border)]" />
             <div className="mb-4 flex items-center justify-between">
