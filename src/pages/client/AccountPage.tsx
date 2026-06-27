@@ -124,7 +124,7 @@ export default function ClientAccountPage() {
                 onClick={() => { hapticTap(); setPushEnabled(prev => !prev); }}
                 className={cn(
                   "w-12 h-6.5 rounded-full relative cursor-pointer border border-neutral-350 shadow-sm transition-colors duration-150",
-                  pushEnabled ? "bg-[#46c300] border-neutral-850" : "bg-neutral-200"
+                  pushEnabled ? "bg-[#005c4b] border-neutral-850" : "bg-neutral-200"
                 )}
               >
                 <div 

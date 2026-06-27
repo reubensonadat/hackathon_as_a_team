@@ -114,7 +114,7 @@ export default function CollectorDashboardPage() {
               {jobs.map(job => (
                 <MapMarker key={job.id} longitude={job.location_lng} latitude={job.location_lat}>
                   <MarkerContent>
-                    <div className="h-5 w-5 rounded-full bg-[#46c300] flex items-center justify-center border-2 border-white shadow-md">
+                    <div className="h-5 w-5 rounded-full bg-[#005c4b] flex items-center justify-center border-2 border-white shadow-md">
                       <div className="h-1.5 w-1.5 bg-black rounded-full" />
                     </div>
                   </MarkerContent>
@@ -138,7 +138,7 @@ export default function CollectorDashboardPage() {
               onClick={() => handleFilterChange(f)}
               className={`shrink-0 rounded-full px-6 py-2.5 text-sm transition-all cursor-pointer ${
                 activeFilter === f
-                  ? 'bg-[#46c300] text-white font-bold shadow-sm'
+                  ? 'bg-[#005c4b] text-white font-bold shadow-sm'
                   : 'bg-white border border-neutral-200 text-neutral-600 font-medium hover:text-neutral-900'
               }`}
             >
@@ -213,7 +213,7 @@ export default function CollectorDashboardPage() {
                         <button 
                           onClick={(e) => handleClaimJob(e, job.id)}
                           disabled={claimingJobId === job.id}
-                          className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center shadow-sm disabled:opacity-50"
+                          className="w-full bg-[#005c4b] hover:bg-[#004a3c] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center shadow-sm disabled:opacity-50"
                         >
                           {claimingJobId === job.id ? 'Claiming...' : 'Claim Job'}
                         </button>

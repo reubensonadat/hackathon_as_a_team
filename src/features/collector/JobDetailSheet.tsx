@@ -87,7 +87,7 @@ export function JobDetailSheet({ job, onClose }: JobDetailSheetProps) {
                 fullWidth 
                 onClick={handleClaim} 
                 loading={loading}
-                className="bg-[#46c300] hover:bg-[#3ea900] text-white shadow-md font-bold text-[15px] py-4 rounded-xl"
+                className="bg-[#005c4b] hover:bg-[#004a3c] text-white shadow-md font-bold text-[15px] py-4 rounded-xl"
               >
                 CLAIM JOB ({formatGhs(PLATFORM_CLAIM_FEE)} FEE)
               </Button>

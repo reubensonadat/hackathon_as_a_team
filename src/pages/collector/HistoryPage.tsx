@@ -97,7 +97,7 @@ export default function CollectorHistoryPage() {
 
                     {/* Bottom Row: Status Indicator */}
                     <div className="border-t border-neutral-100 pt-4 flex justify-between items-center text-sm font-bold">
-                      <span className="text-[#46c300]">Completed</span>
+                      <span className="text-[#005c4b]">Completed</span>
                     </div>
                   </Card>
                 </motion.div>

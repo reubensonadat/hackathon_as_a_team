@@ -48,8 +48,8 @@ export default function SilentResidentBootPage() {
   return (
     <div className="relative flex min-h-[100dvh] flex-col items-center justify-between px-6 py-12 overflow-hidden bg-gradient-to-b from-emerald-50 via-[var(--color-background)] to-emerald-100/50">
       {/* Decorative ambient blobs */}
-      <div className="absolute top-[-20%] left-[-20%] w-[300px] h-[300px] rounded-full bg-lime-300/10 blur-3xl" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] rounded-full bg-lime-400/5 blur-3xl" />
+      <div className="absolute top-[-20%] left-[-20%] w-[300px] h-[300px] rounded-full bg-[#005c4b]/10 blur-3xl" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] rounded-full bg-[#005c4b]/5 blur-3xl" />
 
       {/* Top Section: Brand Logo */}
       <motion.div 
@@ -58,7 +58,7 @@ export default function SilentResidentBootPage() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col items-center mt-8 z-10"
       >
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#46c300] shadow-md mb-4 border border-neutral-200">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#005c4b] shadow-md mb-4 border border-neutral-200">
           {/* Recycle Symbol / Bins Logo SVG */}
           <svg
             className="h-9 w-9 text-white"
@@ -74,7 +74,7 @@ export default function SilentResidentBootPage() {
             />
           </svg>
         </div>
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">CityBins</h1>
+        <h1 className="text-3xl font-black tracking-tight text-neutral-900 uppercase">Borlaboard</h1>
         <p className="mt-1.5 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
           Smart waste networks
         </p>
@@ -94,18 +94,18 @@ export default function SilentResidentBootPage() {
             
             {/* Beautiful modern vector representation of city bin */}
             <div className="relative flex flex-col items-center scale-110">
-              <svg className="w-24 h-24 text-[#46c300] drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-24 h-24 text-[#005c4b] drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
                 {/* Modern Bin Icon */}
                 <path d="M19 4h-3V2.5A1.5 1.5 0 0014.5 1h-5A1.5 1.5 0 008 2.5V4H5a1 1 0 00-1 1v14a4 4 0 004 4h8a4 4 0 004-4V5a1 1 0 00-1-1zM10 3h4v1h-4V3zm7 16a2 2 0 01-2 2H9a2 2 0 01-2-2V6h10v13z" />
                 <path d="M9 9h2v8H9zm4 0h2v8h-2z" opacity="0.8" />
               </svg>
               {/* Radiating Green Circles */}
-              <div className="absolute inset-0 -m-8 rounded-full border border-[#46c300]/20 animate-ping opacity-25" style={{ animationDuration: '3s' }} />
+              <div className="absolute inset-0 -m-8 rounded-full border border-[#005c4b]/30 animate-ping opacity-25" style={{ animationDuration: '3s' }} />
               <div className="absolute inset-0 -m-4 rounded-full border border-white/20 animate-pulse opacity-40" />
             </div>
 
             {/* Float badges */}
-            <span className="absolute top-4 left-4 bg-[#46c300] px-3 py-1 rounded-full text-[9px] font-bold text-white uppercase tracking-widest shadow-sm border border-neutral-800/10">
+            <span className="absolute top-4 left-4 bg-[#005c4b] px-3 py-1 rounded-full text-[9px] font-bold text-white uppercase tracking-widest shadow-sm border border-neutral-800/10">
               Live Network
             </span>
             <span className="absolute bottom-4 right-4 bg-neutral-900/60 text-white backdrop-blur-sm px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest">
@@ -132,7 +132,7 @@ export default function SilentResidentBootPage() {
         <button
           onClick={handleResidentContinue}
           disabled={loading}
-          className="flex min-h-[54px] w-full items-center justify-center gap-3 rounded-2xl border-none bg-[#46c300] hover:bg-[#3ea900] px-5 py-3.5 text-[15px] font-bold text-white shadow-sm transition-all duration-200 cursor-pointer disabled:opacity-50"
+          className="flex min-h-[54px] w-full items-center justify-center gap-3 rounded-2xl border-none bg-[#005c4b] hover:bg-[#004a3c] px-5 py-3.5 text-[15px] font-bold text-white shadow-sm transition-all duration-200 cursor-pointer disabled:opacity-50"
         >
           {loading ? (
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />

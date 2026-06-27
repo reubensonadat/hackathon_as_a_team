@@ -4,7 +4,7 @@ import { LoadingState } from '@/components/ui/LoadingState'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { useAuth } from '@/context/AuthContext'
 
-const SilentResidentBootPage = lazy(() => import('@/pages/auth/SilentResidentBootPage'))
+const WelcomePage = lazy(() => import('@/pages/public/auth/WelcomePage'))
 const DriverPhonePage = lazy(() => import('@/pages/auth/DriverPhonePage'))
 const DriverOtpPage = lazy(() => import('@/pages/auth/DriverOtpPage'))
 const ProfilePage = lazy(() => import('@/pages/onboarding/ProfilePage'))
@@ -53,7 +53,7 @@ function withPageWrapper(element: React.ReactNode) {
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={withPageWrapper(<SilentResidentBootPage />)} />
+      <Route path="/" element={withPageWrapper(<WelcomePage />)} />
       <Route path="/auth/phone" element={withPageWrapper(<DriverPhonePage />)} />
       <Route path="/auth/otp" element={withPageWrapper(<DriverOtpPage />)} />
 

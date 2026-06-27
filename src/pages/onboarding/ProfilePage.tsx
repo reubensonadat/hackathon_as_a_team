@@ -141,7 +141,7 @@ export default function ProfilePage() {
         <div className="pt-2">
           <button
             onClick={handleContinue}
-            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+            className="w-full bg-[#005c4b] hover:bg-[#004a3c] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
             CONTINUE TO LOCATION
           </button>

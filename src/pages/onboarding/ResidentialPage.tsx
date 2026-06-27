@@ -120,7 +120,7 @@ export default function ResidentialPage() {
                   }}
                   className={`flex flex-col items-center justify-center py-5 rounded-2xl border transition-all duration-100 cursor-pointer text-center ${
                     isSelected
-                      ? 'bg-[#46c300] border-neutral-900 text-white font-bold shadow-sm'
+                      ? 'bg-[#005c4b] border-neutral-900 text-white font-bold shadow-sm'
                       : 'bg-white border-neutral-200 text-neutral-500 hover:bg-neutral-50 shadow-sm'
                   }`}
                 >
@@ -217,7 +217,7 @@ export default function ResidentialPage() {
             />
             {/* Overlay to show geocoded status */}
             <div className="absolute top-3 right-3 bg-neutral-900/90 border border-neutral-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-[#46c300] animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-[#005c4b] animate-pulse" />
               <span className="text-[9px] font-bold text-white uppercase tracking-wider">GPS Active</span>
             </div>
           </div>
@@ -230,7 +230,7 @@ export default function ResidentialPage() {
           <button 
             disabled={loading}
             onClick={handleFinish}
-            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+            className="w-full bg-[#005c4b] hover:bg-[#004a3c] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
           >
             {loading ? (
               <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />

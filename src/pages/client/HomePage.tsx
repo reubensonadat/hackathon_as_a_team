@@ -127,10 +127,10 @@ export default function ClientHomePage() {
               {/* Radar status card */}
               <div className="border border-neutral-200 rounded-[28px] bg-white p-5 shadow-sm space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-[#46c300] border border-neutral-200">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-[#005c4b] border border-neutral-200">
                     <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#46c300] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-[#46c300]"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#005c4b] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-[#005c4b]"></span>
                     </span>
                   </div>
                   <div>
@@ -153,7 +153,7 @@ export default function ClientHomePage() {
                 <div className="space-y-2 pt-2">
                   <button
                     onClick={() => { hapticTap(); navigate('/client/track'); }}
-                    className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-xs font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm uppercase"
+                    className="w-full bg-[#005c4b] hover:bg-[#004a3c] transition-colors text-white text-xs font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm uppercase"
                   >
                     TRACK LIVE
                   </button>
@@ -204,7 +204,7 @@ export default function ClientHomePage() {
               {/* Giant Request Button Card */}
               <button
                 onClick={handleRequestImmediatePickup}
-                className="w-full bg-[#46c300] hover:bg-[#3ea900] active:scale-[0.98] transition-all duration-100 border border-neutral-200 py-8 rounded-[28px] cursor-pointer text-center flex flex-col items-center justify-center shadow-sm"
+                className="w-full bg-[#005c4b] hover:bg-[#004a3c] active:scale-[0.98] transition-all duration-100 border border-neutral-200 py-8 rounded-[28px] cursor-pointer text-center flex flex-col items-center justify-center shadow-sm"
               >
                 <div className="flex items-center gap-1.5 mb-2">
                   {/* Trash Icon */}
@@ -244,7 +244,7 @@ export default function ClientHomePage() {
                         hapticTap();
                         setBinSize(prev => prev === 'standard' ? 'extra' : 'standard');
                       }}
-                      className="w-14 h-7 rounded-full bg-[#46c300] relative cursor-pointer border border-neutral-900 shadow-sm"
+                      className="w-14 h-7 rounded-full bg-[#005c4b] relative cursor-pointer border border-neutral-900 shadow-sm"
                     >
                       <div 
                         className={cn(

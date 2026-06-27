@@ -58,7 +58,7 @@ export default function ClientTrackPage() {
   if (loading) {
     return (
       <div className="relative min-h-full flex items-center justify-center pb-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#46c300] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#005c4b] border-t-transparent" />
         <BottomNav items={CLIENT_NAV} />
       </div>
     )

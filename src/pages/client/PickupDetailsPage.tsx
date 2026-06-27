@@ -244,17 +244,17 @@ export default function PickupDetailsPage() {
                     key={cat.id}
                     className={cn(
                       "relative border bg-white p-4 rounded-[28px] shadow-sm flex flex-col justify-between transition-all duration-100 min-h-[140px]",
-                      isSelected ? "bg-[#46c300] border-neutral-900" : "border-neutral-200"
+                      isSelected ? "bg-[#005c4b] border-neutral-900" : "border-neutral-200"
                     )}
                   >
                     {/* Top Row: Icon & Checkbox */}
                     <div className="flex items-center justify-between">
-                      <Icon className={cn("h-7 w-7", isSelected ? "text-white" : "text-[#46c300]")} />
+                      <Icon className={cn("h-7 w-7", isSelected ? "text-white" : "text-[#005c4b]")} />
                       <div 
                         className={cn(
                           "h-5 w-5 rounded border flex items-center justify-center transition-colors cursor-pointer",
                           isSelected 
-                            ? "border-neutral-950 bg-neutral-950 text-[#46c300]" 
+                            ? "border-neutral-950 bg-neutral-950 text-[#005c4b]" 
                             : "border-neutral-350 bg-white"
                         )}
                         onClick={() => {
@@ -267,7 +267,7 @@ export default function PickupDetailsPage() {
                         }}
                       >
                         {isSelected && (
-                          <svg className="h-3 w-3 text-[#46c300] stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="h-3 w-3 text-[#005c4b] stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         )}
@@ -326,7 +326,7 @@ export default function PickupDetailsPage() {
                 className={cn(
                   "py-3.5 rounded-2xl border font-bold text-sm transition-all duration-100 cursor-pointer text-center",
                   spillages 
-                    ? "bg-[#46c300] text-white border-neutral-900 shadow-sm" 
+                    ? "bg-[#005c4b] text-white border-neutral-900 shadow-sm" 
                     : "bg-white text-neutral-600 border-neutral-200 shadow-sm hover:bg-neutral-50"
                 )}
               >
@@ -337,7 +337,7 @@ export default function PickupDetailsPage() {
                 className={cn(
                   "py-3.5 rounded-2xl border font-bold text-sm transition-all duration-100 cursor-pointer text-center",
                   !spillages 
-                    ? "bg-[#46c300] text-white border-neutral-900 shadow-sm" 
+                    ? "bg-[#005c4b] text-white border-neutral-900 shadow-sm" 
                     : "bg-white text-neutral-600 border-neutral-200 shadow-sm hover:bg-neutral-50"
                 )}
               >
@@ -363,7 +363,7 @@ export default function PickupDetailsPage() {
             <div 
               onClick={() => fileInputRef.current?.click()}
               className={cn(
-                "relative flex flex-col items-center justify-center rounded-[28px] border-2 border-dashed border-[#46c300] bg-emerald-50/10 p-6 text-center cursor-pointer transition-all duration-100 shadow-sm",
+                "relative flex flex-col items-center justify-center rounded-[28px] border-2 border-dashed border-[#005c4b] bg-emerald-50/10 p-6 text-center cursor-pointer transition-all duration-100 shadow-sm",
                 photo && "border-solid bg-white border-neutral-200"
               )}
             >
@@ -388,7 +388,7 @@ export default function PickupDetailsPage() {
                 </div>
               ) : (
                 <div className="py-2 flex flex-col items-center justify-center text-center">
-                  <div className="h-12 w-12 rounded-full bg-[#46c300] border border-neutral-200 flex items-center justify-center mb-2 shadow-sm">
+                  <div className="h-12 w-12 rounded-full bg-[#005c4b] border border-neutral-200 flex items-center justify-center mb-2 shadow-sm">
                     <CameraIcon className="h-6 w-6 text-white stroke-[2.5]" />
                   </div>
                   <span className="block text-xs font-black text-neutral-900 mt-1">Take a Photo of the Bins</span>
@@ -404,7 +404,7 @@ export default function PickupDetailsPage() {
           <button 
             disabled={submitting || uploading}
             onClick={handleContinueRequest}
-            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+            className="w-full bg-[#005c4b] hover:bg-[#004a3c] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
           >
             {submitting ? (
               <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
