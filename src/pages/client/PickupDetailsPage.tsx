@@ -154,6 +154,24 @@ export default function PickupDetailsPage() {
       
       const price = calculateTotal()
       const deviceId = getOrCreateDeviceId()
+
+      // Ensure the resident exists in the database before inserting the request
+      // This prevents foreign key errors if local storage is out of sync with the DB
+      const { error: residentError } = await supabase.from('residents').upsert({
+        device_id: deviceId,
+        full_name: localStorage.getItem('borlaboard_profile_name') || 'Resident',
+        phone: localStorage.getItem('borlaboard_profile_phone') || '',
+        address_line: address,
+        area: area,
+        city: 'Cape Coast',
+        onboarding_complete: true,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'device_id' })
+
+      if (residentError) {
+        console.error('Failed to sync resident profile:', residentError)
+        // We don't throw here just in case RLS blocks it, but ideally it succeeds
+      }
       
       const { error } = await supabase.from('pickup_requests').insert({
         resident_device_id: deviceId,
