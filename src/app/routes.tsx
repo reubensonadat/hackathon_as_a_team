@@ -11,6 +11,7 @@ const ResidentialPage = lazy(() => import('@/pages/onboarding/ResidentialPage'))
 const ClientHomePage = lazy(() => import('@/pages/client/HomePage'))
 const ClientTrackPage = lazy(() => import('@/pages/client/TrackPage'))
 const ClientAccountPage = lazy(() => import('@/pages/client/AccountPage'))
+const PickupDetailsPage = lazy(() => import('@/pages/client/PickupDetailsPage'))
 const CollectorDashboardPage = lazy(() => import('@/pages/collector/DashboardPage'))
 const CollectorHistoryPage = lazy(() => import('@/pages/collector/HistoryPage'))
 const CollectorAccountPage = lazy(() => import('@/pages/collector/AccountPage'))
@@ -64,6 +65,14 @@ export function AppRoutes() {
         element={withPageWrapper(
           <RoleGate>
             <ClientHomePage />
+          </RoleGate>,
+        )}
+      />
+      <Route
+        path="/client/pickup-details"
+        element={withPageWrapper(
+          <RoleGate>
+            <PickupDetailsPage />
           </RoleGate>,
         )}
       />

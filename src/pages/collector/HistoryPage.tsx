@@ -1,7 +1,6 @@
 import { BottomNav } from '@/components/layout/BottomNav'
 import { Card } from '@/components/ui/Card'
 import { COLLECTOR_NAV } from '@/lib/constants'
-import { formatGhs } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import type { JobStatus } from '@/types'
