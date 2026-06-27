@@ -6,30 +6,72 @@ import { BottomNav } from '@/components/layout/BottomNav'
 import { CLIENT_NAV } from '@/lib/constants'
 import { hapticTap, cn } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
-
-export const MOCK_HISTORY = [
-  { id: 'REQ-4811', bins: '1x Residential (Small)', date: '25 Jun 2026', price: 15, status: 'Completed' },
-  { id: 'REQ-4792', bins: '2x Residential (Large)', date: '22 Jun 2026', price: 50, status: 'Completed' },
-  { id: 'REQ-4788', bins: '1x Commercial (Small)', date: '18 Jun 2026', price: 50, status: 'Completed' },
-  { id: 'REQ-4621', bins: '1x Residential (Small)', date: '10 Jun 2026', price: 15, status: 'Completed' },
-]
+import { supabase } from '@/lib/supabase'
+import { getOrCreateDeviceId } from '@/lib/deviceId'
 
 export default function ClientHomePage() {
   const navigate = useNavigate()
   const [activeRequest, setActiveRequest] = useState<any>(null)
+  const [history, setHistory] = useState<any[]>([])
   const [binSize, setBinSize] = useState<'standard' | 'extra'>('standard')
 
-  const area = localStorage.getItem('borlaboard_residential_area') ?? 'East Legon, Sector 4'
+  const area = localStorage.getItem('borlaboard_residential_area') ?? 'Not Set'
 
-  // Load active request from localStorage
+  const fetchData = async () => {
+    if (!supabase) return
+    const deviceId = getOrCreateDeviceId()
+
+    // Active request
+    const { data: active } = await supabase
+      .from('pickup_requests')
+      .select('*, drivers(full_name)')
+      .eq('resident_device_id', deviceId)
+      .neq('status', 'completed')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+
+    if (active) {
+      setActiveRequest(active)
+    } else {
+      setActiveRequest(null)
+    }
+
+    // History
+    const { data: past } = await supabase
+      .from('pickup_requests')
+      .select('*')
+      .eq('resident_device_id', deviceId)
+      .eq('status', 'completed')
+      .order('created_at', { ascending: false })
+      .limit(3)
+
+    if (past) {
+      setHistory(past)
+    }
+  }
+
   useEffect(() => {
-    const saved = localStorage.getItem('citybins_active_request')
-    if (saved) {
-      try {
-        setActiveRequest(JSON.parse(saved))
-      } catch (e) {
-        console.error(e)
-      }
+    fetchData()
+
+    // Realtime subscription
+    if (!supabase) return
+    const deviceId = getOrCreateDeviceId()
+
+    const sub = supabase
+      .channel('public:pickup_requests')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'pickup_requests',
+        filter: `resident_device_id=eq.${deviceId}`
+      }, () => {
+        fetchData()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(sub)
     }
   }, [])
 
@@ -38,10 +80,16 @@ export default function ClientHomePage() {
     navigate('/client/pickup-details')
   }
 
-  const handleCancelRequest = () => {
+  const handleCancelRequest = async () => {
     hapticTap()
-    localStorage.removeItem('citybins_active_request')
-    setActiveRequest(null)
+    if (!supabase || !activeRequest) return
+    // Only allow cancel if open
+    if (activeRequest.status === 'open') {
+      await supabase.from('pickup_requests').delete().eq('id', activeRequest.id)
+      setActiveRequest(null)
+    } else {
+      alert("Can't cancel because a driver has already claimed it.")
+    }
   }
 
   return (
@@ -88,7 +136,9 @@ export default function ClientHomePage() {
                   <div>
                     <h2 className="text-base font-black text-neutral-900">Active Collection</h2>
                     <p className="text-xs font-semibold text-neutral-500 mt-0.5 font-sans">
-                      Kwame is currently en route to your residence.
+                      {activeRequest.status === 'open' 
+                        ? 'Waiting for a collector to claim your request.'
+                        : `${activeRequest.drivers?.full_name || 'A driver'} is currently en route.`}
                     </p>
                   </div>
                 </div>
@@ -97,7 +147,7 @@ export default function ClientHomePage() {
 
                 <div className="flex items-center justify-between text-xs px-1 font-bold text-neutral-700">
                   <span>Estimated Price</span>
-                  <span className="font-black text-neutral-900">{activeRequest.price ?? 15} GHS</span>
+                  <span className="font-black text-neutral-900">{activeRequest.proposed_price ?? 15} GHS</span>
                 </div>
 
                 <div className="space-y-2 pt-2">
@@ -108,12 +158,14 @@ export default function ClientHomePage() {
                     TRACK LIVE
                   </button>
                   
-                  <button
-                    onClick={handleCancelRequest}
-                    className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-neutral-400 hover:text-red-650 transition-colors py-1.5 cursor-pointer"
-                  >
-                    CANCEL REQUEST
-                  </button>
+                  {activeRequest.status === 'open' && (
+                    <button
+                      onClick={handleCancelRequest}
+                      className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-neutral-400 hover:text-red-650 transition-colors py-1.5 cursor-pointer"
+                    >
+                      CANCEL REQUEST
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -239,39 +291,41 @@ export default function ClientHomePage() {
         </AnimatePresence>
 
         {/* Recent Pickups History Section */}
-        <div className="mt-8 space-y-3">
-          <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
-            Recent Pickups
-          </label>
-          <div className="space-y-4">
-            {MOCK_HISTORY.slice(0, 3).map((item) => (
-              <div 
-                key={item.id} 
-                className="border border-neutral-200 bg-white p-4 rounded-[28px] shadow-sm flex items-center justify-between gap-4"
-              >
-                <div>
-                  <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block">
-                    {item.id}
-                  </span>
-                  <span className="text-sm font-bold text-neutral-900 mt-1 block">
-                    {item.bins}
-                  </span>
-                  <span className="text-[10px] font-medium text-neutral-400 mt-0.5 block">
-                    {item.date}
-                  </span>
+        {history.length > 0 && (
+          <div className="mt-8 space-y-3">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+              Recent Pickups
+            </label>
+            <div className="space-y-4">
+              {history.map((item) => (
+                <div 
+                  key={item.id} 
+                  className="border border-neutral-200 bg-white p-4 rounded-[28px] shadow-sm flex items-center justify-between gap-4"
+                >
+                  <div>
+                    <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block">
+                      {item.id.split('-')[0]}-{item.id.slice(-4)}
+                    </span>
+                    <span className="text-sm font-bold text-neutral-900 mt-1 block">
+                      Collection
+                    </span>
+                    <span className="text-[10px] font-medium text-neutral-400 mt-0.5 block">
+                      {new Date(item.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-black text-neutral-900 block">
+                      {item.proposed_price} GHS
+                    </span>
+                    <span className="inline-flex items-center gap-1 bg-neutral-150 text-neutral-705 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mt-1.5 border border-neutral-200">
+                      {item.status}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-sm font-black text-neutral-900 block">
-                    {item.price} GHS
-                  </span>
-                  <span className="inline-flex items-center gap-1 bg-neutral-150 text-neutral-705 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mt-1.5 border border-neutral-200">
-                    {item.status}
-                  </span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </AppShell>
 
       {/* Bottom Nav */}

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { PlusIcon, MinusIcon, CameraIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { BottomSheet } from '@/components/layout/BottomSheet'
 import { Button } from '@/components/ui/Button'
 import { hapticTap } from '@/lib/utils'
+import { supabase } from '@/lib/supabase'
 
 interface PickupRequestSheetProps {
   open: boolean
@@ -24,6 +25,7 @@ export function PickupRequestSheet({ open, onClose, onSubmit }: PickupRequestShe
   const [spillages, setSpillages] = useState(false)
   const [photo, setPhoto] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleIncrement = (index: number) => {
     hapticTap()
@@ -35,15 +37,34 @@ export function PickupRequestSheet({ open, onClose, onSubmit }: PickupRequestShe
     setBins(prev => prev.map((b, i) => i === index && b.count > 0 ? { ...b, count: b.count - 1 } : b))
   }
 
-  const handlePhotoUpload = () => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
     hapticTap()
     setUploading(true)
-    // Simulate photo upload
-    setTimeout(() => {
-      // Use a green waste bin icon pattern as a mocked image URI
-      setPhoto('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=400&q=80')
+    
+    try {
+      if (!supabase) throw new Error('Supabase not connected')
+
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`
+      
+      const { error: uploadError } = await supabase.storage
+        .from('pickups')
+        .upload(fileName, file)
+
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage.from('pickups').getPublicUrl(fileName)
+      setPhoto(data.publicUrl)
+    } catch (error) {
+      console.error('Error uploading photo:', error)
+      alert('Could not upload photo. Have you created the "pickups" public bucket in Supabase?')
+    } finally {
       setUploading(false)
-    }, 800)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
   }
 
   const handleRemovePhoto = (e: React.MouseEvent) => {
@@ -143,8 +164,16 @@ export function PickupRequestSheet({ open, onClose, onSubmit }: PickupRequestShe
             Visual Context
           </label>
           
+          <input 
+            type="file" 
+            accept="image/*" 
+            ref={fileInputRef} 
+            onChange={handlePhotoUpload} 
+            className="hidden" 
+          />
+
           <div 
-            onClick={handlePhotoUpload}
+            onClick={() => fileInputRef.current?.click()}
             className={`relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center cursor-pointer transition-all duration-200 ${
               photo 
                 ? 'border-emerald-500 bg-emerald-50/20' 
@@ -192,7 +221,7 @@ export function PickupRequestSheet({ open, onClose, onSubmit }: PickupRequestShe
           <Button
             fullWidth
             onClick={handleSubmit}
-            disabled={totalCost === 0}
+            disabled={totalCost === 0 || uploading}
             className="bg-[var(--color-primary)] hover:bg-emerald-800 shadow-md font-bold text-[15px] py-4 rounded-xl"
           >
             CONTINUE TO REQUEST
