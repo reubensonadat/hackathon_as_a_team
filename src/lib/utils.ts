@@ -6,7 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatGhs(amount: number): string {
-  return `GH₵${amount.toFixed(2)}`
+  return new Intl.NumberFormat('en-GH', {
+    style: 'currency',
+    currency: 'GHS',
+    minimumFractionDigits: 2,
+  }).format(amount)
 }
 
 export function hapticTap() {
