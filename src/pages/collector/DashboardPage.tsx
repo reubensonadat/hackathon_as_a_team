@@ -1,108 +1,91 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BottomNav } from '@/components/layout/BottomNav'
 import { Map, MapMarker, MarkerContent } from '@/components/ui/map'
 import { Card } from '@/components/ui/Card'
 import { COLLECTOR_NAV } from '@/lib/constants'
 import { hapticTap } from '@/lib/utils'
 import { JobDetailSheet } from '@/features/collector/JobDetailSheet'
-import type { PickupRequest } from '@/types'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-
-// Extended type for mock visualization
-interface MockPickupJob extends PickupRequest {
-  distance: string
-  priority: 'High Priority' | 'Standard'
-  binsInfo: string
-  spillages: boolean
-}
-
-const MOCK_JOBS: MockPickupJob[] = [
-  {
-    id: 'REQ-4819',
-    residentDeviceId: 'dev-1',
-    photoUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=150&q=80',
-    proposedPrice: 45.0,
-    locationLat: 5.1053,
-    locationLng: -1.2466,
-    addressText: 'House A24, Amamoma',
-    status: 'open',
-    createdAt: new Date().toISOString(),
-    distance: '0.3 km',
-    priority: 'High Priority',
-    binsInfo: '2x Large Bin, 1x Standard Bin',
-    spillages: true
-  },
-  {
-    id: 'REQ-8812',
-    residentDeviceId: 'dev-2',
-    photoUrl: '',
-    proposedPrice: 15.0,
-    locationLat: 5.112,
-    locationLng: -1.25,
-    addressText: 'Hostel Royale',
-    status: 'open',
-    createdAt: new Date().toISOString(),
-    distance: '1.1 km',
-    priority: 'Standard',
-    binsInfo: '1x Standard Bin',
-    spillages: false
-  },
-  {
-    id: 'REQ-3109',
-    residentDeviceId: 'dev-3',
-    photoUrl: '',
-    proposedPrice: 35.0,
-    locationLat: 5.108,
-    locationLng: -1.248,
-    addressText: 'UCC Science Area',
-    status: 'open',
-    createdAt: new Date().toISOString(),
-    distance: '0.8 km',
-    priority: 'High Priority',
-    binsInfo: '1x Commercial Bin',
-    spillages: false
-  }
-]
+import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
 const FILTERS = ['All', 'High Priority', 'Nearby'] as const
 
 export default function CollectorDashboardPage() {
-  const [jobs, setJobs] = useState<MockPickupJob[]>(MOCK_JOBS)
+  const { user } = useAuth()
+  const [jobs, setJobs] = useState<any[]>([])
   const [activeFilter, setActiveFilter] = useState<(typeof FILTERS)[number]>('All')
-  const [selectedJob, setSelectedJob] = useState<PickupRequest | null>(null)
-  const [claimedJobId, setClaimedJobId] = useState<string | null>(null)
+  const [selectedJob, setSelectedJob] = useState<any | null>(null)
+  const [claimingJobId, setClaimingJobId] = useState<string | null>(null)
+
+  const fetchJobs = async () => {
+    if (!supabase || !user) return
+    const { data } = await supabase
+      .from('pickup_requests')
+      .select('*')
+      .in('status', ['open', 'claimed'])
+      .order('created_at', { ascending: false })
+
+    if (data) {
+      // Filter out jobs claimed by OTHER drivers
+      const relevantJobs = data.filter(
+        (job) => job.status === 'open' || (job.status === 'claimed' && job.driver_id === user.id)
+      )
+      setJobs(relevantJobs)
+    }
+  }
+
+  useEffect(() => {
+    fetchJobs()
+
+    if (!supabase) return
+    const sub = supabase
+      .channel('public:pickup_requests')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'pickup_requests' }, () => {
+        fetchJobs()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(sub)
+    }
+  }, [user])
 
   const handleFilterChange = (filter: typeof FILTERS[number]) => {
     hapticTap()
     setActiveFilter(filter)
   }
 
-  const handleClaimJob = (e: React.MouseEvent, jobId: string) => {
+  const handleClaimJob = async (e: React.MouseEvent, jobId: string) => {
     e.stopPropagation()
     hapticTap()
-    setClaimedJobId(jobId)
+    if (!user) return
+    setClaimingJobId(jobId)
     
-    setTimeout(() => {
-      setJobs(prev => prev.filter(j => j.id !== jobId))
-      setClaimedJobId(null)
-    }, 1500)
+    try {
+      const { error } = await supabase.rpc('claim_pickup_job', {
+        job_id: jobId,
+        claiming_driver_id: user.id
+      })
+      if (error) throw error
+      await fetchJobs()
+    } catch (err) {
+      console.error(err)
+      alert("Failed to claim job.")
+    } finally {
+      setClaimingJobId(null)
+    }
   }
 
   const filteredJobs = jobs.filter(job => {
-    if (activeFilter === 'High Priority') return job.priority === 'High Priority'
-    if (activeFilter === 'Nearby') {
-      const dist = parseFloat(job.distance)
-      return dist < 1.0
-    }
+    if (activeFilter === 'High Priority') return job.proposed_price > 30
     return true
   })
 
   return (
     <div className="relative min-h-[100dvh] bg-[#F9FAFB] overflow-hidden font-sans pb-32">
-      
       <div className="relative z-10 mx-auto max-w-lg px-4 pt-6 flex flex-col min-h-[100dvh]">
-        
         {/* Header */}
         <div className="flex items-center justify-between mb-6 pt-2">
           <div className="w-8 h-8 rounded-full bg-white shadow-sm border border-neutral-200 flex items-center justify-center">
@@ -129,7 +112,7 @@ export default function CollectorDashboardPage() {
               interactive={true}
             >
               {jobs.map(job => (
-                <MapMarker key={job.id} longitude={job.locationLng} latitude={job.locationLat}>
+                <MapMarker key={job.id} longitude={job.location_lng} latitude={job.location_lat}>
                   <MarkerContent>
                     <div className="h-5 w-5 rounded-full bg-[#46c300] flex items-center justify-center border-2 border-white shadow-md">
                       <div className="h-1.5 w-1.5 bg-black rounded-full" />
@@ -138,14 +121,6 @@ export default function CollectorDashboardPage() {
                 </MapMarker>
               ))}
             </Map>
-            <div className="absolute right-3 bottom-3 flex flex-col gap-2">
-              <button className="w-10 h-10 bg-white/90 backdrop-blur-md rounded-xl flex items-center justify-center border border-black/5 shadow-sm">
-                <span className="text-neutral-900 text-lg leading-none font-medium">+</span>
-              </button>
-              <button className="w-10 h-10 bg-white/90 backdrop-blur-md rounded-xl flex items-center justify-center border border-black/5 shadow-sm">
-                <span className="text-neutral-900 text-lg leading-none font-medium">[]</span>
-              </button>
-            </div>
           </div>
         </motion.div>
 
@@ -200,16 +175,18 @@ export default function CollectorDashboardPage() {
                   >
                     {/* Top Row: ID */}
                     <div className="flex justify-between items-center mb-6">
-                      <span className="text-neutral-900 text-lg font-bold tracking-wide">{job.id}</span>
+                      <span className="text-neutral-900 text-lg font-bold tracking-wide">
+                        {job.id.split('-')[0]}-{job.id.slice(-4)}
+                      </span>
                       <span className="text-neutral-900 font-black text-lg">
-                        GHS {job.proposedPrice.toFixed(2)}
+                        GHS {job.proposed_price?.toFixed(2)}
                       </span>
                     </div>
 
                     {/* Middle Row: Locations & Dates */}
                     <div className="flex justify-between items-center mb-6">
                       <div className="flex-1">
-                        <p className="text-neutral-900 text-[15px] font-bold mb-1">{job.addressText}</p>
+                        <p className="text-neutral-900 text-[15px] font-bold mb-1">{job.address_text}</p>
                         <p className="text-neutral-500 text-xs font-medium">From</p>
                       </div>
                       
@@ -219,19 +196,28 @@ export default function CollectorDashboardPage() {
                       
                       <div className="flex-1 text-right">
                         <p className="text-neutral-900 text-[15px] font-bold mb-1">Landfill Hub</p>
-                        <p className="text-neutral-500 text-xs font-medium">{job.distance}</p>
+                        <p className="text-neutral-500 text-xs font-medium">2.4 km</p>
                       </div>
                     </div>
 
                     {/* Bottom Row: Claim Job Button */}
                     <div className="pt-2">
-                      <button 
-                        onClick={(e) => handleClaimJob(e, job.id)}
-                        disabled={claimedJobId === job.id}
-                        className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center"
-                      >
-                        {claimedJobId === job.id ? 'Claiming...' : 'Claim Job'}
-                      </button>
+                      {job.status === 'claimed' ? (
+                         <button 
+                         className="w-full bg-neutral-900 text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center shadow-sm"
+                         onClick={(e) => { e.stopPropagation(); setSelectedJob(job); }}
+                       >
+                         Complete Job
+                       </button>
+                      ) : (
+                        <button 
+                          onClick={(e) => handleClaimJob(e, job.id)}
+                          disabled={claimingJobId === job.id}
+                          className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center shadow-sm disabled:opacity-50"
+                        >
+                          {claimingJobId === job.id ? 'Claiming...' : 'Claim Job'}
+                        </button>
+                      )}
                     </div>
                   </Card>
                 </motion.div>
@@ -241,7 +227,7 @@ export default function CollectorDashboardPage() {
         </div>
       </div>
 
-      <JobDetailSheet job={selectedJob} onClose={() => setSelectedJob(null)} />
+      <JobDetailSheet job={selectedJob} onClose={() => { setSelectedJob(null); fetchJobs(); }} />
       <BottomNav items={COLLECTOR_NAV} />
     </div>
   )

@@ -8,20 +8,45 @@ import { IconBox } from '@/components/ui/IconBox'
 import { BorlaBoardMarkIcon, PickupTruckIcon } from '@/components/icons'
 import { NavIcons } from '@/components/icons'
 import { hapticTap } from '@/lib/utils'
+import { useAuth } from '@/context/AuthContext'
 
 export default function DriverPhonePage() {
   const navigate = useNavigate()
+  const { signInWithPhone } = useAuth()
   const [phone, setPhone] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  function handleContinue() {
+  async function handleContinue() {
     const cleaned = phone.replace(/\D/g, '')
     if (cleaned.length < 9) {
       setError('Enter a valid Ghana phone number')
       return
     }
+
+    let formatted = cleaned
+    if (formatted.startsWith('0')) {
+      formatted = '+233' + formatted.substring(1)
+    } else if (!formatted.startsWith('233') && !formatted.startsWith('+233')) {
+      formatted = '+233' + formatted
+    } else if (formatted.startsWith('233')) {
+      formatted = '+' + formatted
+    }
+
     hapticTap()
-    sessionStorage.setItem('borlaboard_driver_phone', cleaned)
+    setLoading(true)
+    setError(null)
+
+    const { error: signInError } = await signInWithPhone(formatted)
+
+    if (signInError) {
+      setError(signInError.message || 'Failed to send OTP')
+      setLoading(false)
+      return
+    }
+
+    sessionStorage.setItem('borlaboard_driver_phone', formatted)
+    setLoading(false)
     navigate('/auth/otp')
   }
 
@@ -56,7 +81,7 @@ export default function DriverPhonePage() {
             setError(null)
           }}
         />
-        <Button fullWidth onClick={handleContinue}>
+        <Button fullWidth loading={loading} disabled={loading} onClick={handleContinue}>
           Send OTP
         </Button>
       </Card>

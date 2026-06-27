@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoadingState } from '@/components/ui/LoadingState'
 import { PageWrapper } from '@/components/layout/PageWrapper'
+import { useAuth } from '@/context/AuthContext'
 
 const SilentResidentBootPage = lazy(() => import('@/pages/auth/SilentResidentBootPage'))
 const DriverPhonePage = lazy(() => import('@/pages/auth/DriverPhonePage'))
@@ -22,9 +23,22 @@ function RoleGate({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
-function DriverGate({ children }: { children: React.ReactNode }) {
+function ResidentGate({ children }: { children: React.ReactNode }) {
   const role = localStorage.getItem('borlaboard_role')
-  if (role !== 'driver') return <Navigate to="/auth/phone" replace />
+  const isComplete = localStorage.getItem('borlaboard_onboarding_complete') === 'true'
+  
+  if (role === 'driver') return <Navigate to="/collector/dashboard" replace />
+  if (!isComplete) return <Navigate to="/" replace />
+  
+  return <>{children}</>
+}
+
+function DriverGate({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isInitializing } = useAuth()
+  
+  if (isInitializing) return <LoadingState />
+  if (!isAuthenticated) return <Navigate to="/auth/phone" replace />
+  
   return <>{children}</>
 }
 
@@ -63,9 +77,9 @@ export function AppRoutes() {
       <Route
         path="/client/home"
         element={withPageWrapper(
-          <RoleGate>
+          <ResidentGate>
             <ClientHomePage />
-          </RoleGate>,
+          </ResidentGate>,
         )}
       />
       <Route
@@ -79,17 +93,17 @@ export function AppRoutes() {
       <Route
         path="/client/track"
         element={withPageWrapper(
-          <RoleGate>
+          <ResidentGate>
             <ClientTrackPage />
-          </RoleGate>,
+          </ResidentGate>,
         )}
       />
       <Route
         path="/client/account"
         element={withPageWrapper(
-          <RoleGate>
+          <ResidentGate>
             <ClientAccountPage />
-          </RoleGate>,
+          </ResidentGate>,
         )}
       />
 

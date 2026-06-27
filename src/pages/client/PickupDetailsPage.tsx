@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Bars3Icon, UserIcon, TrashIcon, CameraIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { AppShell } from '@/components/layout/AppShell'
 import { hapticTap, cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
+import { getOrCreateDeviceId } from '@/lib/deviceId'
 
 interface BinCategory {
   id: string
@@ -24,6 +26,8 @@ export default function PickupDetailsPage() {
   const [spillages, setSpillages] = useState(false)
   const [photo, setPhoto] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const area = localStorage.getItem('borlaboard_residential_area') ?? 'East Legon, Sector 4'
   const address = localStorage.getItem('borlaboard_residential_address') ?? 'Not set'
@@ -85,13 +89,34 @@ export default function PickupDetailsPage() {
     setBins((prev) => ({ ...prev, [id]: Math.max(0, prev[id] - 1) }))
   }
 
-  const handlePhotoUpload = () => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
     hapticTap()
     setUploading(true)
-    setTimeout(() => {
-      setPhoto('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=400&q=80')
+    
+    try {
+      if (!supabase) throw new Error('Supabase not connected')
+
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`
+      
+      const { error: uploadError } = await supabase.storage
+        .from('pickups')
+        .upload(fileName, file)
+
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage.from('pickups').getPublicUrl(fileName)
+      setPhoto(data.publicUrl)
+    } catch (error) {
+      console.error('Error uploading photo:', error)
+      alert('Could not upload photo. Have you created the "pickups" public bucket in Supabase?')
+    } finally {
       setUploading(false)
-    }, 800)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
   }
 
   const handleRemovePhoto = (e: React.MouseEvent) => {
@@ -111,7 +136,7 @@ export default function PickupDetailsPage() {
     return total
   }
 
-  const handleContinueRequest = () => {
+  const handleContinueRequest = async () => {
     hapticTap()
     const activeBins = categories
       .filter((cat) => bins[cat.id] > 0)
@@ -122,27 +147,50 @@ export default function PickupDetailsPage() {
       return
     }
 
-    const price = calculateTotal()
-    const newRequest = {
-      id: 'REQ-' + Math.floor(Math.random() * 9000 + 1000),
-      status: 'claimed', // Auto-claimed for en-route tracking view
-      timestamp: new Date().toISOString(),
-      area,
-      address,
-      bins: activeBins,
-      spillages,
-      photo,
-      price,
-      driverName: 'Kwame',
-      driverRating: '4.9',
-      driverEta: '12 mins',
-      driverDistance: '2.4 mi',
-      driverTruck: 'Truck #884-A',
-      driverPhone: '+233240000000',
-    }
+    setSubmitting(true)
 
-    localStorage.setItem('citybins_active_request', JSON.stringify(newRequest))
-    navigate('/client/track')
+    try {
+      if (!supabase) throw new Error('Supabase not connected')
+      
+      const price = calculateTotal()
+      const deviceId = getOrCreateDeviceId()
+
+      // Ensure the resident exists in the database before inserting the request
+      // This prevents foreign key errors if local storage is out of sync with the DB
+      const { error: residentError } = await supabase.from('residents').upsert({
+        device_id: deviceId,
+        full_name: localStorage.getItem('borlaboard_profile_name') || 'Resident',
+        phone: localStorage.getItem('borlaboard_profile_phone') || '',
+        address_line: address,
+        area: area,
+        city: 'Cape Coast',
+        onboarding_complete: true,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'device_id' })
+
+      if (residentError) {
+        console.error('Failed to sync resident profile:', residentError)
+        // We don't throw here just in case RLS blocks it, but ideally it succeeds
+      }
+      
+      const { error } = await supabase.from('pickup_requests').insert({
+        resident_device_id: deviceId,
+        proposed_price: price,
+        address_text: address,
+        photo_url: photo,
+        location_lat: 5.1053, // Mocked lat/lng for hackathon
+        location_lng: -1.2466,
+      })
+
+      if (error) throw error
+
+      navigate('/client/track')
+    } catch (error) {
+      console.error('Error creating request:', error)
+      alert('Failed to create pickup request. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -304,11 +352,19 @@ export default function PickupDetailsPage() {
               Visual Context (Optional)
             </label>
             
+            <input 
+              type="file" 
+              accept="image/*" 
+              ref={fileInputRef} 
+              onChange={handlePhotoUpload} 
+              className="hidden" 
+            />
+
             <div 
-              onClick={handlePhotoUpload}
+              onClick={() => fileInputRef.current?.click()}
               className={cn(
                 "relative flex flex-col items-center justify-center rounded-[28px] border-2 border-dashed border-[#46c300] bg-emerald-50/10 p-6 text-center cursor-pointer transition-all duration-100 shadow-sm",
-                photo && "border-solid bg-white"
+                photo && "border-solid bg-white border-neutral-200"
               )}
             >
               {uploading ? (
@@ -346,11 +402,18 @@ export default function PickupDetailsPage() {
       <div className="fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-lg border-t border-neutral-200 p-4 z-40">
         <div className="mx-auto max-w-lg">
           <button 
+            disabled={submitting || uploading}
             onClick={handleContinueRequest}
-            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+            className="w-full bg-[#46c300] hover:bg-[#3ea900] transition-colors text-white text-sm font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
           >
-            CONTINUE TO REQUEST
-            <ArrowRightIcon className="h-4 w-4 stroke-[2.5]" />
+            {submitting ? (
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            ) : (
+              <>
+                CONTINUE TO REQUEST
+                <ArrowRightIcon className="h-4 w-4 stroke-[2.5]" />
+              </>
+            )}
           </button>
         </div>
       </div>
